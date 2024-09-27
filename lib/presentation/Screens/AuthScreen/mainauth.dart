@@ -62,18 +62,16 @@ class Mainauth extends StatelessWidget {
             SizedBox(
               height: 40.h,
             ),
-            Text(
-              'Enjoy listening to music',
-              style:
-                  GoogleFonts.aDLaMDisplay(color: Colors.white, fontSize: 22),
-            ),
+            Text('Enjoy listening to music',
+                style: TextStyle(
+                    fontFamily: 'Satoshi', color: Colors.white, fontSize: 26)),
             SizedBox(
               height: 30.h,
             ),
             Text(
-              'Spotify is a proprietary Swedish audio\n streaming and media services provider',
-              style: GoogleFonts.fredoka(color: Colors.white, fontSize: 14),
-            ),
+                'Spotify is a proprietary Swedish audio\n streaming and media services provider',
+                style: TextStyle(
+                    fontFamily: 'Satoshi', color: Colors.white, fontSize: 17)),
             SizedBox(
               height: 50.h,
             ),
@@ -91,13 +89,11 @@ class Mainauth extends StatelessWidget {
                           borderRadius: BorderRadius.circular(30),
                           color: const Color(0xff42C83C)),
                       child: Center(
-                        child: Text(
-                          'Register',
-                          style: GoogleFonts.aDLaMDisplay(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold),
-                        ),
+                        child: Text('Register',
+                            style: TextStyle(
+                                fontFamily: 'Satoshi',
+                                color: Colors.white,
+                                fontSize: 19)),
                       ),
                     )),
                 InkWell(
@@ -111,13 +107,11 @@ class Mainauth extends StatelessWidget {
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: Center(
-                        child: Text(
-                          'Sign in',
-                          style: GoogleFonts.aDLaMDisplay(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold),
-                        ),
+                        child: Text('Sign in',
+                            style: TextStyle(
+                                fontFamily: 'Satoshi',
+                                color: Colors.white,
+                                fontSize: 19)),
                       ),
                     )),
               ],

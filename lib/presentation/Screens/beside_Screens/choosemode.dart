@@ -23,31 +23,27 @@ class Choosemode extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: 65,
+            top: 65.h,
             left: 100.w,
             child: Image.asset('assets/Vector.png'),
           ),
           Positioned(
             top: 400.h,
             left: 125.w,
-            child: Text(
-              'Shoose Mode',
-              style: GoogleFonts.aBeeZee(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold),
-            ),
+            child: Text('Choose Mode',
+                style: TextStyle(
+                    fontFamily: 'Satoshi', color: Colors.white, fontSize: 22)),
           ),
           Positioned(
-              left: 100,
+              left: 100.w,
               top: 500.h,
               child: InkWell(
                   onTap: () {},
                   child: Row(
                     children: [
                       Container(
-                          width: 73,
-                          height: 73,
+                          width: 73.w,
+                          height: 73.h,
                           decoration: const BoxDecoration(),
                           child: Stack(alignment: Alignment.center, children: [
                             Image.asset('assets/Ellipse 14.png'),
@@ -59,8 +55,8 @@ class Choosemode extends StatelessWidget {
                           ])),
                       SizedBox(width: 70.w),
                       Container(
-                          width: 73,
-                          height: 73,
+                          width: 73.w,
+                          height: 73.h,
                           decoration: const BoxDecoration(),
                           child: Stack(alignment: Alignment.center, children: [
                             Image.asset('assets/Ellipse 13.png'),
@@ -73,26 +69,24 @@ class Choosemode extends StatelessWidget {
                     ],
                   ))),
           Positioned(
-              top: 700,
-              left: 50,
+              top: 700.h,
+              left: 50.w,
               child: InkWell(
                   onTap: () {
                     Navigator.pushNamed(context, Mainauth.routeName);
                   },
                   child: Container(
-                    width: 329,
-                    height: 92,
+                    width: 329.w,
+                    height: 92.h,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
                         color: const Color(0xff42C83C)),
                     child: Center(
-                      child: Text(
-                        'Continue',
-                        style: GoogleFonts.aDLaMDisplay(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold),
-                      ),
+                      child: Text('Continue',
+                          style: TextStyle(
+                              fontFamily: 'Satoshi',
+                              color: Colors.white,
+                              fontSize: 22)),
                     ),
                   )))
         ],
