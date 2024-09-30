@@ -1,30 +1,27 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mp3_app/data/Apimanager.dart';
-import 'package:mp3_app/data/model/audioReponse.dart';
-
+import 'package:mp3_app/data/model/SuwarResponse.dart';
+import 'package:mp3_app/data/model/reciterResponse.dart';
 
 import 'package:mp3_app/presentation/Screens/Homepage/cubit/showSur/cubit/showsurStates.dart';
 
 class ShowsurCubit extends Cubit<Showsurstates> {
   ShowsurCubit() : super(ShowsurInitstates());
 
-  List<Surahs> AduioData = [];
+  List<Suwar> suwar = [];
 
-  void getAudioData(String reciterId) async {
+  void getSwarData() async {
     try {
       emit(ShowsurLoadingstates());
-      var response = await Apimanager.getReciterAudio(reciterId);
-      if (response.code == 200 && response.code! < 300) {
-        print(response);
-        AduioData = response.data!.surahs ?? [];
-        emit(ShowsurSucessstates(response: response));
-      } else {
-        emit(ShowsurErrorstates(
-            ErrorMessage: response.status ?? 'error in cubit'));
-      }
+      var response = await Apimanager.getSuwar();
+
+      print(response);
+
+      suwar = response.suwar ?? [];
+      emit(ShowsurSucessstates(response: response));
     } catch (e) {
-      emit(ShowsurErrorstates(ErrorMessage: e.toString()));
+      throw e.toString();
+      // emit(ShowsurErrorstates(ErrorMessage: e.toString()));
     }
   }
 }

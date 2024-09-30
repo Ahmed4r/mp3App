@@ -1,4 +1,5 @@
-import 'package:mp3_app/data/model/audioReponse.dart';
+import 'package:mp3_app/data/model/SuwarResponse.dart';
+import 'package:mp3_app/data/model/reciterResponse.dart';
 
 class Showsurstates {}
 
@@ -7,7 +8,8 @@ class ShowsurInitstates extends Showsurstates {}
 class ShowsurLoadingstates extends Showsurstates {}
 
 class ShowsurSucessstates extends Showsurstates {
-  audioResponse response;
+  //
+  SuwarResponse response;
   ShowsurSucessstates({required this.response});
 }
 

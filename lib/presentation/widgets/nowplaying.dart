@@ -1,9 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mp3_app/appTheme.dart';
+import 'package:mp3_app/data/model/reciterResponse.dart';
+import 'package:mp3_app/presentation/Screens/Homepage/cubit/homepageCubit.dart';
+import 'package:mp3_app/presentation/Screens/Homepage/cubit/homepageStates.dart';
 import 'package:mp3_app/presentation/Screens/Homepage/homepage.dart';
 import 'package:mp3_app/presentation/widgets/progressBar.dart';
 
@@ -17,94 +21,17 @@ class Nowplaying extends StatefulWidget {
 
 class _NowplayingState extends State<Nowplaying> {
   final player = AudioPlayer();
-  bool isPlaying = false;
-  late String audio;
-  late String surah;
-
-  double progress = 0.0;
-  late StreamSubscription<Duration> positionSubscription;
-  late StreamSubscription<PlayerState> playerStateSubscription;
+  Homepagecubit cubit = Homepagecubit();
 
   @override
-  void initState() {
-    super.initState();
-    positionSubscription = player.positionStream.listen((position) {
-      setState(() {
-        progress = position.inSeconds.toDouble();
-      });
-    });
-
-    playerStateSubscription = player.playerStateStream.listen((state) {
-      if (!mounted) return; // Check if the widget is still mounted
-      setState(() {
-        isPlaying = state.playing;
-      });
-    });
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final arguments =
-        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-
-    if (arguments != null) {
-      audio = arguments['audio'];
-      surah = arguments['surah'];
-     
-      play(audio);
-    } else {
-      // Handle the error case
-      print("No arguments were passed to Nowplaying screen");
-    }
-
-    player.playerStateStream.listen((state) {
-      if (state.playing == false) {
-        setState(() {
-          isPlaying = false;
-        });
-      }
-    });
-
-    player.positionStream.listen((position) {
-      setState(() {
-        progress = position.inSeconds
-            .toDouble(); // Update progress regardless of playing state
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    positionSubscription.cancel(); // Cancel the position subscription
-    playerStateSubscription.cancel();
-    player.dispose(); // Dispose the player here
-    super.dispose();
-  }
-
-  void play(String audioUrl) async {
-    if (isPlaying) return;
-
-    try {
-      await player.setUrl(audioUrl);
-      player.play();
-      setState(() {
-        isPlaying = true;
-      });
-    } catch (e) {
-      print("Error loading audio: $e");
-    }
-  }
-
-  void pause() {
-    player.pause();
-    setState(() {
-      isPlaying = false;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<dynamic, dynamic>?;
+
+    String url = args?['url'] ?? 0;
+    String reciter = args?['reciter'] ?? 'no reciter found';
+    String surahName = args?['surah'] ?? 'no reciter found';
     return Scaffold(
       backgroundColor: Appcolors.primaryColor,
       body: Column(
@@ -136,8 +63,8 @@ class _NowplayingState extends State<Nowplaying> {
           SizedBox(height: 40.h),
           ClipRRect(
             borderRadius: BorderRadius.circular(15.r),
-            child: Image.asset(
-              'assets/mohamed-seddik-el-menchaoui-154.jpg',
+            child: Image.network(
+              'https://m.media-amazon.com/images/I/71tO3oeRtML._UF894,1000_QL80_.jpg',
               width: 300.0,
               height: 300.0,
               fit: BoxFit.cover,
@@ -152,46 +79,36 @@ class _NowplayingState extends State<Nowplaying> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      surah,
+                      reciter,
                       style: const TextStyle(
                         fontSize: 20,
                         color: Colors.white,
                         fontFamily: 'Satoshi',
                       ),
                     ),
-                    // Text(
-                    //   reciter,
-                    //   style: TextStyle(
-                    //     fontSize: 20,
-                    //     color: Colors.white,
-                    //     fontFamily: 'Satoshi',
-                    //   ),
-                    // ),
+                    Text(
+                      surahName,
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontFamily: 'Satoshi',
+                      ),
+                    ),
                   ],
                 ),
                 SizedBox(
-                  width: 120.w,
+                  width: 185.w,
                 ),
                 IconButton(
                     onPressed: () {},
                     icon: Icon(
                       Icons.favorite,
                       size: 36.sp,
-                      color: Appcolors.secondaryColor,
                     )),
               ],
             ),
           ),
           SizedBox(height: 70.h),
-          ProgressBar(
-            progress: progress,
-            duration: player.duration ?? Duration.zero,
-            position: player.position,
-            onChanged: (value) {
-              player.seek(
-                  Duration(seconds: value.toInt())); // Seek to new position
-            },
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -213,13 +130,12 @@ class _NowplayingState extends State<Nowplaying> {
                   color: Appcolors.ButtonColor,
                 ),
                 child: IconButton(
-                  onPressed: () async {
-                    setState(() {
-                      isPlaying ? pause() : play(audio);
-                    });
+                  onPressed: () {
+                    player.setUrl(url);
+                    player.play();
                   },
                   icon: Icon(
-                    isPlaying ? Icons.pause : Icons.play_arrow,
+                    Icons.play_arrow,
                     color: Colors.white,
                   ),
                 ),

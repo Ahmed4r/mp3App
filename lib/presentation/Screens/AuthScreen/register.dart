@@ -4,6 +4,7 @@ import 'package:mp3_app/appTheme.dart';
 
 import 'package:mp3_app/main.dart';
 import 'package:mp3_app/presentation/Screens/AuthScreen/login.dart';
+import 'package:mp3_app/presentation/Screens/Homepage/cubit/showSur/showsurah.dart';
 import 'package:mp3_app/presentation/Screens/Homepage/homepage.dart';
 import 'package:mp3_app/presentation/widgets/customTextField.dart';
 
@@ -155,7 +156,8 @@ class _RegisterState extends State<Register> {
                               suffixIconColor: Appcolors.secondaryColor,
                               errorMaxLines: 2,
                               hintText: 'Enter Your Password',
-                              hintStyle: const TextStyle(color: Color(0xff6F6F6F)),
+                              hintStyle:
+                                  const TextStyle(color: Color(0xff6F6F6F)),
                               border: InputBorder.none,
                             ),
                             controller: passwordController,
@@ -254,7 +256,7 @@ class _RegisterState extends State<Register> {
   void checkRegister() {
     if (formKey.currentState!.validate()) {
       print('form is valid');
-      Navigator.pushReplacementNamed(context, Homepage.routeName);
+      Navigator.pushReplacementNamed(context, Showsurah.routeName);
     } else {
       print('form is unvalid');
     }

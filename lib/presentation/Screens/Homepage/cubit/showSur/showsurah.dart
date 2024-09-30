@@ -3,9 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mp3_app/appTheme.dart';
-import 'package:mp3_app/data/model/audioReponse.dart';
+import 'package:mp3_app/data/model/reciterResponse.dart';
 import 'package:mp3_app/presentation/Screens/Homepage/cubit/showSur/cubit/showsurCubit.dart';
 import 'package:mp3_app/presentation/Screens/Homepage/cubit/showSur/cubit/showsurStates.dart';
+import 'package:mp3_app/presentation/widgets/nowplaying.dart';
 
 class Showsurah extends StatefulWidget {
   static const String routeName = 'showsur';
@@ -17,39 +18,34 @@ class Showsurah extends StatefulWidget {
 }
 
 class _ShowsurahState extends State<Showsurah> {
-  final AudioPlayer player = AudioPlayer();
-  int? currentlyPlayingSurahIndex; // Track the currently playing Surah index
-
-  @override
-  void dispose() {
-    player.dispose(); // Dispose the audio player
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final arg =
-        ModalRoute.of(context)?.settings.arguments as Map<String, String>?;
-
-    String reciterId = arg?['reciterId'] ?? 'no id';
-    print('Reciter ID: $reciterId');
+        ModalRoute.of(context)?.settings.arguments as Map<dynamic, dynamic>?;
+    Moshaf moshaf = arg?['mp3list'] ?? 0;
+    String surahList = arg?['surahList'] ?? '';
+    String reciter = arg?['reciter'] ?? '';
+    print('listttttttttttttttttttttt: ${moshaf.server}');
+    print(
+        'surahhhhhhhhhhlistttttttttttttttttttttt: ${moshaf.surahList.toString()}');
+    // final server = moshaf![0];
+    // print('serverrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr${moshaf.server![2]}');
 
     return BlocProvider(
       create: (context) {
         print('Creating ShowsurCubit...');
-        return ShowsurCubit()..getAudioData(reciterId);
+        return ShowsurCubit()..getSwarData();
       },
       child: BlocBuilder<ShowsurCubit, Showsurstates>(
         builder: (context, state) {
           print('Current State: $state');
 
           return Scaffold(
-            backgroundColor: const Color(0xff1C1B1B),
-            body: Column(
-              children: [
+              backgroundColor: const Color(0xff1C1B1B),
+              body: Column(children: [
                 SizedBox(height: 60.h),
                 Text(
-                  'Sur',
+                  'السور',
                   style: TextStyle(
                     color: Colors.white,
                     fontFamily: Fontstyle.fontname,
@@ -60,15 +56,19 @@ class _ShowsurahState extends State<Showsurah> {
                 if (state is ShowsurLoadingstates) ...[
                   const Center(child: CircularProgressIndicator()),
                 ] else if (state is ShowsurSucessstates) ...[
-                  if (state.response.data != null &&
-                      state.response.data!.surahs != null) ...[
-                    Expanded(
+                  if (state.response.suwar != null &&
+                      state.response.suwar!.isNotEmpty) ...[
+                    SizedBox(
+                      height: 700.h,
                       child: ListView.builder(
-                        itemCount: state.response.data!.surahs!.length,
+                        itemCount: state.response.suwar!.length,
                         itemBuilder: (context, index) {
-                          final surah = state.response.data!.surahs![index];
+                          final surah = state.response.suwar![index];
                           String surahName = surah.name ?? 'Surah name unknown';
-                          int surahNumber = surah.number ?? 0;
+                          int surahId = surah.id ?? 0;
+
+                          String formattedNumber =
+                              surahId.toString().padLeft(3, '0');
 
                           return Padding(
                             padding: EdgeInsets.symmetric(vertical: 10.h),
@@ -83,60 +83,27 @@ class _ShowsurahState extends State<Showsurah> {
                                     fontSize: 18.sp,
                                   ),
                                 ),
-                                subtitle: Text(
-                                  'Ayahs: ${surah.ayahs?.length ?? 0}', // Display the count of ayahs
-                                  style: TextStyle(
-                                    color: Colors.grey[400],
-                                    fontFamily: Fontstyle.fontname,
-                                    fontSize: 16.sp,
-                                  ),
-                                ),
-                                trailing: Icon(
-                                  currentlyPlayingSurahIndex == index
-                                      ? Icons.pause
-                                      : Icons.play_arrow,
-                                  color: Colors.green,
-                                ),
-                                onTap: () async {
-                                  if (currentlyPlayingSurahIndex == index) {
-                                    // If the same Surah is tapped, pause or stop playback
-                                    await player.stop();
-                                    setState(() {
-                                      currentlyPlayingSurahIndex =
-                                          null; // Reset the playing index
-                                    });
-                                  } else {
-                                    // Play the new Surah
-                                    setState(() {
-                                      currentlyPlayingSurahIndex =
-                                          index; // Set the new playing index
-                                    });
-
-                                    if (surah.ayahs != null &&
-                                        surah.ayahs!.isNotEmpty) {
-                                      for (var ayah in surah.ayahs!) {
-                                        try {
-                                          await player
-                                              .stop(); // Stop any currently playing audio
-                                          if (ayah.audio != null &&
-                                              ayah.audio!.isNotEmpty) {
-                                            await player.setUrl(ayah.audio!);
-                                            await player.play();
-                                            break; // Exit after starting to play the first ayah
-                                          } else {
-                                            print(
-                                                "Audio URL is empty or null for ayah: ${ayah.number}");
-                                          }
-                                        } catch (e) {
-                                          print(
-                                              "Error playing audio for ayah ${ayah.number}: $e");
-                                        }
-                                      }
-                                    } else {
-                                      print("No ayahs found for the surah.");
-                                    }
-                                  }
-                                },
+                                subtitle: Text(surahId.toString()),
+                                trailing: IconButton(
+                                    onPressed: () {
+                                      print(surahId);
+                                      AudioPlayer player = AudioPlayer();
+                                      player.setUrl(
+                                          '${moshaf.server!}/${formattedNumber}.mp3');
+                                      player.play();
+                                      String url =
+                                          '${moshaf.server!}/${formattedNumber}.mp3';
+                                      String surah = surahName;
+                                      String reciterName = reciter;
+                                      Navigator.pushNamed(
+                                          context, Nowplaying.routeName,
+                                          arguments: {
+                                            'url': url,
+                                            'reciter': reciterName,
+                                            'surah': surahName
+                                          });
+                                    },
+                                    icon: Icon(Icons.play_arrow)),
                               ),
                             ),
                           );
@@ -146,7 +113,7 @@ class _ShowsurahState extends State<Showsurah> {
                   ] else ...[
                     Center(
                       child: Text(
-                        'Failed to load reciters',
+                        'No reciters found.',
                         style: TextStyle(
                           color: Colors.red,
                           fontFamily: Fontstyle.fontname,
@@ -155,10 +122,10 @@ class _ShowsurahState extends State<Showsurah> {
                       ),
                     ),
                   ],
-                ] else ...[
+                ] else if (state is ShowsurErrorstates) ...[
                   Center(
                     child: Text(
-                      'Failed to load reciters',
+                      'Failed to load reciters: ${state.ErrorMessage}',
                       style: TextStyle(
                         color: Colors.red,
                         fontFamily: Fontstyle.fontname,
@@ -166,10 +133,8 @@ class _ShowsurahState extends State<Showsurah> {
                       ),
                     ),
                   ),
-                ],
-              ],
-            ),
-          );
+                ]
+              ]));
         },
       ),
     );

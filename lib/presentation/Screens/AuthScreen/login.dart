@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mp3_app/appTheme.dart';
+import 'package:mp3_app/presentation/Screens/Homepage/cubit/showSur/showsurah.dart';
 
 import 'package:mp3_app/presentation/Screens/Homepage/homepage.dart';
 
@@ -125,7 +126,8 @@ class _LoginState extends State<Login> {
                               suffixIconColor: Appcolors.secondaryColor,
                               errorMaxLines: 2,
                               hintText: 'Password',
-                              hintStyle: const TextStyle(color: Color(0xff6F6F6F)),
+                              hintStyle:
+                                  const TextStyle(color: Color(0xff6F6F6F)),
                               border: InputBorder.none,
                             ),
                             controller: passwordController,
@@ -216,7 +218,7 @@ class _LoginState extends State<Login> {
   void checkLogin() {
     if (formKey.currentState!.validate()) {
       print('form is valid');
-      Navigator.pushReplacementNamed(context, Homepage.routeName);
+      Navigator.pushReplacementNamed(context, Showsurah.routeName);
     } else {
       print('form is unvalid');
     }

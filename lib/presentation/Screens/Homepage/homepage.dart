@@ -9,6 +9,7 @@ import 'package:mp3_app/presentation/Screens/Homepage/cubit/homepageStates.dart'
 import 'package:mp3_app/presentation/Screens/Homepage/search.dart';
 import 'package:mp3_app/presentation/Screens/Homepage/cubit/showSur/showsurah.dart';
 import 'package:mp3_app/presentation/playScreen/playScreen.dart';
+import 'package:mp3_app/presentation/widgets/nowplaying.dart';
 
 class Homepage extends StatelessWidget {
   static const String routeName = 'homepage';
@@ -19,7 +20,7 @@ class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => Homepagecubit()..getReciterData(),
+      create: (context) => Homepagecubit()..getRecitersData(),
       child: BlocBuilder<Homepagecubit, Homepagestates>(
         builder: (context, state) {
           return Scaffold(
@@ -44,11 +45,11 @@ class Homepage extends StatelessWidget {
                   ),
                   SizedBox(height: 30.h),
                   Text(
-                    'Reciters',
+                    'القراء',
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: Fontstyle.fontname,
-                      fontSize: 20.sp,
+                      fontSize: 30.sp,
                     ),
                   ),
                   SizedBox(height: 10.h),
@@ -58,16 +59,15 @@ class Homepage extends StatelessWidget {
                           ? SizedBox(
                               height: 700.h,
                               child: ListView.builder(
-                                itemCount: state.response.data?.length ?? 0,
+                                itemCount: state.response.reciters?.length ?? 0,
                                 itemBuilder: (context, index) {
-                                  final reciter = state.response.data![index];
+                                  final reciter =
+                                      state.response.reciters![index];
 
                                   String reciterName =
                                       reciter.name ?? 'No Name';
-                                  String englishName =
-                                      reciter.englishName ?? 'No English Name';
-                                  String reciterID =
-                                      reciter.identifier ?? 'No English Name';
+                                  String SurahId =
+                                      reciter.id.toString() ?? 'No Name';
 
                                   return Padding(
                                     padding:
@@ -83,14 +83,6 @@ class Homepage extends StatelessWidget {
                                             fontSize: 18.sp,
                                           ),
                                         ),
-                                        subtitle: Text(
-                                          englishName,
-                                          style: TextStyle(
-                                            color: Colors.grey[400],
-                                            fontFamily: Fontstyle.fontname,
-                                            fontSize: 16.sp,
-                                          ),
-                                        ),
                                         trailing: const Icon(
                                           Icons.open_in_full,
                                           color: Colors.green,
@@ -99,7 +91,10 @@ class Homepage extends StatelessWidget {
                                           Navigator.pushNamed(
                                               context, Showsurah.routeName,
                                               arguments: {
-                                                'reciterId': reciterID
+                                                'reciter':reciterName,
+                                                'mp3list': reciter.moshaf![0],
+                                                'surahList':
+                                                    reciter.moshaf![0].surahList
                                               });
                                         },
                                       ),

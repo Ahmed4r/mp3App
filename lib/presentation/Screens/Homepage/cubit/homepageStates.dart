@@ -1,4 +1,5 @@
-import 'package:mp3_app/data/model/RecitionResponse.dart';
+import 'package:mp3_app/data/model/SuwarResponse.dart';
+import 'package:mp3_app/data/model/reciterResponse.dart';
 
 class Homepagestates {}
 
@@ -7,7 +8,7 @@ class HomepageInitState extends Homepagestates {}
 class HomepageLoadingState extends Homepagestates {}
 
 class HomepageSuccessState extends Homepagestates {
-  Recitations response;
+  reciterResponse response;
   HomepageSuccessState({required this.response});
 }
 
