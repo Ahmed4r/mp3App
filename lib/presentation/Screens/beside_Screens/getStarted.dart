@@ -35,7 +35,7 @@ class Getstarted extends StatelessWidget {
           Positioned(
             top: 650.h,
             left: 60.w,
-            child: Text('Enjoy Listening to music',
+            child: const Text('Enjoy Listening to music',
                 style: TextStyle(
                     fontFamily: 'Satoshi', color: Colors.white, fontSize: 25)),
           ),
@@ -53,7 +53,7 @@ class Getstarted extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
                         color: const Color(0xff42C83C)),
-                    child: Center(
+                    child: const Center(
                       child: Text('Get Started',
                           style: TextStyle(
                               fontFamily: 'Satoshi',

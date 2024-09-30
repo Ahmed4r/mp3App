@@ -6,6 +6,8 @@ import 'package:mp3_app/presentation/Screens/profile/profileScreen.dart';
 
 class Bottomnavbar extends StatefulWidget {
   static const String routeName = 'nav';
+
+  const Bottomnavbar({super.key});
   @override
   State<Bottomnavbar> createState() => _BottomnavbarState();
 }
@@ -15,8 +17,8 @@ class _BottomnavbarState extends State<Bottomnavbar> {
   List<Widget> screens = [
     Homepage(),
     DiscoveryScreen(),
-    FavoritesScreen(),
-    Profilescreen(),
+    const FavoritesScreen(),
+    const Profilescreen(),
   ];
 
   void onTap(int index) {
@@ -28,13 +30,13 @@ class _BottomnavbarState extends State<Bottomnavbar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff343434),
+      backgroundColor: const Color(0xff343434),
       body: screens[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xff343434),
+        backgroundColor: const Color(0xff343434),
         currentIndex: currentIndex,
         onTap: onTap,
-        selectedItemColor: Color(0xff42C83C),
+        selectedItemColor: const Color(0xff699B88),
         unselectedItemColor: Colors.grey, // Set to a visible color
         type: BottomNavigationBarType.fixed,
         elevation: 0,

@@ -6,7 +6,7 @@ import 'package:mp3_app/presentation/Screens/Homepage/homepage.dart';
 
 class Login extends StatefulWidget {
   static const String routeName = 'login';
-  Login({super.key});
+  const Login({super.key});
 
   @override
   State<Login> createState() => _LoginState();
@@ -45,7 +45,7 @@ class _LoginState extends State<Login> {
               SizedBox(
                 height: 10.h,
               ),
-              Text(
+              const Text(
                 'Sign In',
                 style: TextStyle(
                     color: Colors.white, fontFamily: 'Satoshi', fontSize: 30),
@@ -62,7 +62,7 @@ class _LoginState extends State<Login> {
                         height: 80.h,
                         decoration: BoxDecoration(
                             border: Border.all(
-                              color: Color(0xff3C3B3B),
+                              color: const Color(0xff3C3B3B),
                             ),
                             borderRadius: BorderRadius.circular(30.sp)),
                         child: Padding(
@@ -70,7 +70,7 @@ class _LoginState extends State<Login> {
                           child: TextFormField(
                             style:
                                 TextStyle(color: Colors.white, fontSize: 18.sp),
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: 'Enter Your Email',
                               hintStyle: TextStyle(color: Color(0xff6F6F6F)),
                               border: InputBorder.none,
@@ -100,7 +100,7 @@ class _LoginState extends State<Login> {
                         height: 80.h,
                         decoration: BoxDecoration(
                             border: Border.all(
-                              color: Color(0xff3C3B3B),
+                              color: const Color(0xff3C3B3B),
                             ),
                             borderRadius: BorderRadius.circular(30.sp)),
                         child: Padding(
@@ -125,7 +125,7 @@ class _LoginState extends State<Login> {
                               suffixIconColor: Appcolors.secondaryColor,
                               errorMaxLines: 2,
                               hintText: 'Password',
-                              hintStyle: TextStyle(color: Color(0xff6F6F6F)),
+                              hintStyle: const TextStyle(color: Color(0xff6F6F6F)),
                               border: InputBorder.none,
                             ),
                             controller: passwordController,
@@ -159,7 +159,7 @@ class _LoginState extends State<Login> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(35.sp),
                       color: Appcolors.ButtonColor),
-                  child: Center(
+                  child: const Center(
                     child: Text('Sign In',
                         style: TextStyle(
                             fontFamily: 'Satoshi',

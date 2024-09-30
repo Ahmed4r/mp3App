@@ -7,7 +7,7 @@ import 'package:mp3_app/presentation/widgets/nowplaying.dart';
 class Reciterprof extends StatelessWidget {
   String audio;
   String imageUrl;
-  Reciterprof({required this.audio, required this.imageUrl});
+  Reciterprof({super.key, required this.audio, required this.imageUrl});
   final player = AudioPlayer();
 
   @override

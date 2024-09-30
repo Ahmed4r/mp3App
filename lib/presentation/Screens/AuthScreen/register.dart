@@ -9,7 +9,7 @@ import 'package:mp3_app/presentation/widgets/customTextField.dart';
 
 class Register extends StatefulWidget {
   static const String routeName = 'register';
-  Register({super.key});
+  const Register({super.key});
 
   @override
   State<Register> createState() => _RegisterState();
@@ -49,7 +49,7 @@ class _RegisterState extends State<Register> {
               SizedBox(
                 height: 10.h,
               ),
-              Text(
+              const Text(
                 'Register',
                 style: TextStyle(
                     color: Colors.white, fontFamily: 'Satoshi', fontSize: 30),
@@ -70,8 +70,8 @@ class _RegisterState extends State<Register> {
                         child: Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: TextFormField(
-                            style: TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
                               hintText: 'Enter Your Name',
                               hintStyle: TextStyle(color: Color(0xff6F6F6F)),
                               border: InputBorder.none,
@@ -94,14 +94,14 @@ class _RegisterState extends State<Register> {
                         height: 80.h,
                         decoration: BoxDecoration(
                             border: Border.all(
-                              color: Color(0xff3C3B3B),
+                              color: const Color(0xff3C3B3B),
                             ),
                             borderRadius: BorderRadius.circular(30.sp)),
                         child: Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: TextFormField(
-                            style: TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
                               hintText: 'Enter Your Email',
                               hintStyle: TextStyle(color: Color(0xff6F6F6F)),
                               border: InputBorder.none,
@@ -131,14 +131,14 @@ class _RegisterState extends State<Register> {
                         height: 80.h,
                         decoration: BoxDecoration(
                             border: Border.all(
-                              color: Color(0xff3C3B3B),
+                              color: const Color(0xff3C3B3B),
                             ),
                             borderRadius: BorderRadius.circular(30.sp)),
                         child: Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: TextFormField(
                             obscureText: issecured,
-                            style: TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Colors.white),
                             decoration: InputDecoration(
                               suffixIcon: InkWell(
                                 onTap: () {
@@ -155,7 +155,7 @@ class _RegisterState extends State<Register> {
                               suffixIconColor: Appcolors.secondaryColor,
                               errorMaxLines: 2,
                               hintText: 'Enter Your Password',
-                              hintStyle: TextStyle(color: Color(0xff6F6F6F)),
+                              hintStyle: const TextStyle(color: Color(0xff6F6F6F)),
                               border: InputBorder.none,
                             ),
                             controller: passwordController,
@@ -185,8 +185,8 @@ class _RegisterState extends State<Register> {
                   height: 92.h,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(35.sp),
-                      color: Color(0xff16423C)),
-                  child: Center(
+                      color: const Color(0xff16423C)),
+                  child: const Center(
                     child: Text('Create Account',
                         style: TextStyle(
                             fontFamily: 'Satoshi',
@@ -227,7 +227,7 @@ class _RegisterState extends State<Register> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'Do you have an account ?',
                     style: TextStyle(
                         color: Colors.white,
@@ -238,7 +238,7 @@ class _RegisterState extends State<Register> {
                       onPressed: () {
                         Navigator.pushNamed(context, Login.routeName);
                       },
-                      child: Text(
+                      child: const Text(
                         'Sign in',
                         style: TextStyle(fontSize: 14, fontFamily: 'Satoshi'),
                       ))

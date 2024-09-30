@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mp3_app/presentation/Screens/AuthScreen/register.dart';
-import 'package:mp3_app/presentation/Screens/Homepage/homepage.dart';
-import 'package:mp3_app/presentation/Screens/beside_Screens/getStarted.dart';
 
 class Splashscreen extends StatelessWidget {
   static const String routeName = 'splashScreen';

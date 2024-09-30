@@ -4,7 +4,7 @@ class Customtextfield extends StatelessWidget {
   String message ;
   TextEditingController? controller;
 
-  Customtextfield({required this.controller,required this.message});
+  Customtextfield({super.key, required this.controller,required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +19,7 @@ class Customtextfield extends StatelessWidget {
           if (value == null || value.isEmpty) {
             return message;
             }
+          return null;
         },
         showCursor: true,
         controller: controller,

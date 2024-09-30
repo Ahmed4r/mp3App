@@ -16,7 +16,7 @@ class Playscreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         elevation: 0,
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Now playing',
           style: TextStyle(color: Colors.white),
         ),
@@ -24,7 +24,7 @@ class Playscreen extends StatelessWidget {
             onPressed: () {
               Navigator.pushNamed(context, Homepage.routeName);
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_back_ios_new,
               color: Appcolors.whiteColor,
               

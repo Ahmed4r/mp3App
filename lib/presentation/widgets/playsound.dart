@@ -6,15 +6,14 @@ import 'package:mp3_app/presentation/widgets/nowplaying.dart';
 
 class CustomPlaysound extends StatelessWidget {
   String surah;
-  String reciter;
+
   String audio;
-  CustomPlaysound(
-      {required this.surah, required this.reciter, required this.audio});
+  CustomPlaysound({super.key, required this.surah, required this.audio});
   final player = AudioPlayer();
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 140.h,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,7 +24,6 @@ class CustomPlaysound extends StatelessWidget {
                 Navigator.pushNamed(context, Nowplaying.routeName, arguments: {
                   'audio': audio,
                   'surah': surah,
-                  'reciter': reciter
                 });
               },
               child: Container(
@@ -38,7 +36,7 @@ class CustomPlaysound extends StatelessWidget {
           SizedBox(
             width: 40.w,
           ),
-          Container(
+          SizedBox(
             width: 200.w,
             height: 200.h,
             child: Column(
@@ -47,18 +45,18 @@ class CustomPlaysound extends StatelessWidget {
               children: [
                 Text(
                   surah,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 20,
                       fontFamily: Fontstyle.fontname,
                       color: Colors.white),
                 ),
-                Text(
-                  reciter,
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: Fontstyle.fontname,
-                      color: Colors.white),
-                ),
+                // Text(
+                //   reciter,
+                //   style: TextStyle(
+                //       fontSize: 18,
+                //       fontFamily: Fontstyle.fontname,
+                //       color: Colors.white),
+                // ),
               ],
             ),
           ),

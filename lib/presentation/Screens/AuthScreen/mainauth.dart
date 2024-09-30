@@ -62,13 +62,13 @@ class Mainauth extends StatelessWidget {
             SizedBox(
               height: 40.h,
             ),
-            Text('Enjoy listening to music',
+            const Text('Enjoy listening to music',
                 style: TextStyle(
                     fontFamily: 'Satoshi', color: Colors.white, fontSize: 26)),
             SizedBox(
               height: 30.h,
             ),
-            Text(
+            const Text(
                 'Spotify is a proprietary Swedish audio\n streaming and media services provider',
                 style: TextStyle(
                     fontFamily: 'Satoshi', color: Colors.white, fontSize: 17)),
@@ -88,7 +88,7 @@ class Mainauth extends StatelessWidget {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(30),
                           color: const Color(0xff42C83C)),
-                      child: Center(
+                      child: const Center(
                         child: Text('Register',
                             style: TextStyle(
                                 fontFamily: 'Satoshi',
@@ -106,7 +106,7 @@ class Mainauth extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Text('Sign in',
                             style: TextStyle(
                                 fontFamily: 'Satoshi',

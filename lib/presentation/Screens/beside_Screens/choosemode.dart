@@ -30,7 +30,7 @@ class Choosemode extends StatelessWidget {
           Positioned(
             top: 400.h,
             left: 125.w,
-            child: Text('Choose Mode',
+            child: const Text('Choose Mode',
                 style: TextStyle(
                     fontFamily: 'Satoshi', color: Colors.white, fontSize: 22)),
           ),
@@ -81,7 +81,7 @@ class Choosemode extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
                         color: const Color(0xff42C83C)),
-                    child: Center(
+                    child: const Center(
                       child: Text('Continue',
                           style: TextStyle(
                               fontFamily: 'Satoshi',

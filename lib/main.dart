@@ -6,6 +6,7 @@ import 'package:mp3_app/presentation/Screens/AuthScreen/mainauth.dart';
 import 'package:mp3_app/presentation/Screens/AuthScreen/register.dart';
 import 'package:mp3_app/presentation/Screens/Homepage/homepage.dart';
 import 'package:mp3_app/presentation/Screens/Homepage/search.dart';
+import 'package:mp3_app/presentation/Screens/Homepage/cubit/showSur/showsurah.dart';
 import 'package:mp3_app/presentation/Screens/beside_Screens/choosemode.dart';
 import 'package:mp3_app/presentation/Screens/beside_Screens/getStarted.dart';
 import 'package:mp3_app/presentation/Screens/splashScreen/splashScreen.dart';
@@ -23,18 +24,19 @@ class mp3App extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: Splashscreen(),
+          home: const Splashscreen(),
           // put splash in intial
-          initialRoute: Splashscreen.routeName,
+          initialRoute: Homepage.routeName,
           routes: {
             Homepage.routeName: (context) => Bottomnavbar(),
-            Getstarted.routeName: (context) => Getstarted(),
-            Choosemode.routeName: (context) => Choosemode(),
-            Mainauth.routeName: (context) => Mainauth(),
+            Showsurah.routeName: (context) => Showsurah(),
+            Getstarted.routeName: (context) => const Getstarted(),
+            Choosemode.routeName: (context) => const Choosemode(),
+            Mainauth.routeName: (context) => const Mainauth(),
             Login.routeName: (context) => Login(),
             Register.routeName: (context) => Register(),
-            Playscreen.routeName: (context) => Playscreen(),
-            Search.routeName: (context) => Search(),
+            Playscreen.routeName: (context) => const Playscreen(),
+            Search.routeName: (context) => const Search(),
             Nowplaying.routeName: (context) => Nowplaying(),
           },
         );

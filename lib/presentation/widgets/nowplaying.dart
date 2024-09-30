@@ -1,12 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mp3_app/appTheme.dart';
 import 'package:mp3_app/presentation/Screens/Homepage/homepage.dart';
+import 'package:mp3_app/presentation/widgets/progressBar.dart';
 
 class Nowplaying extends StatefulWidget {
   static const String routeName = 'nowPlaying';
-  Nowplaying({super.key});
+  const Nowplaying({super.key});
 
   @override
   State<Nowplaying> createState() => _NowplayingState();
@@ -17,20 +20,43 @@ class _NowplayingState extends State<Nowplaying> {
   bool isPlaying = false;
   late String audio;
   late String surah;
-  late String reciter;
 
+  double progress = 0.0;
+  late StreamSubscription<Duration> positionSubscription;
+  late StreamSubscription<PlayerState> playerStateSubscription;
+
+  @override
   void initState() {
     super.initState();
+    positionSubscription = player.positionStream.listen((position) {
+      setState(() {
+        progress = position.inSeconds.toDouble();
+      });
+    });
+
+    playerStateSubscription = player.playerStateStream.listen((state) {
+      if (!mounted) return; // Check if the widget is still mounted
+      setState(() {
+        isPlaying = state.playing;
+      });
+    });
   }
 
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     final arguments =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-    audio = arguments['audio'];
-    surah = arguments['surah'];
-    reciter = arguments['reciter'];
-    play(audio);
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+    if (arguments != null) {
+      audio = arguments['audio'];
+      surah = arguments['surah'];
+     
+      play(audio);
+    } else {
+      // Handle the error case
+      print("No arguments were passed to Nowplaying screen");
+    }
 
     player.playerStateStream.listen((state) {
       if (state.playing == false) {
@@ -39,24 +65,35 @@ class _NowplayingState extends State<Nowplaying> {
         });
       }
     });
+
+    player.positionStream.listen((position) {
+      setState(() {
+        progress = position.inSeconds
+            .toDouble(); // Update progress regardless of playing state
+      });
+    });
   }
 
+  @override
   void dispose() {
-    player.dispose();
+    positionSubscription.cancel(); // Cancel the position subscription
+    playerStateSubscription.cancel();
+    player.dispose(); // Dispose the player here
     super.dispose();
   }
 
-  void play(audio) async {
+  void play(String audioUrl) async {
     if (isPlaying) return;
 
-    if (player.audioSource == null) {
-      await player.setUrl(audio);
+    try {
+      await player.setUrl(audioUrl);
+      player.play();
+      setState(() {
+        isPlaying = true;
+      });
+    } catch (e) {
+      print("Error loading audio: $e");
     }
-
-    player.play();
-    setState(() {
-      isPlaying = true;
-    });
   }
 
   void pause() {
@@ -68,119 +105,139 @@ class _NowplayingState extends State<Nowplaying> {
 
   @override
   Widget build(BuildContext context) {
-    // play(audio);
     return Scaffold(
       backgroundColor: Appcolors.primaryColor,
       body: Column(
         children: [
-          SizedBox(
-            height: 40.h,
-          ),
+          SizedBox(height: 40.h),
           Row(
-            // mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               IconButton(
-                  onPressed: () {
-                    Navigator.popAndPushNamed(context, Homepage.routeName);
-                  },
-                  icon: Icon(
-                    Icons.arrow_back_ios_new,
-                    size: 20.sp,
-                    color: Appcolors.whiteColor,
-                  )),
-              SizedBox(
-                width: 100.w,
+                onPressed: () {
+                  Navigator.popAndPushNamed(context, Homepage.routeName);
+                },
+                icon: Icon(
+                  Icons.arrow_back_ios_new,
+                  size: 20.sp,
+                  color: Appcolors.whiteColor,
+                ),
               ),
-              Text(
+              SizedBox(width: 100.w),
+              const Text(
                 'Now playing',
                 style: TextStyle(
-                    fontSize: 20, color: Colors.white, fontFamily: 'Satoshi'),
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontFamily: 'Satoshi',
+                ),
               ),
             ],
           ),
-          SizedBox(
-            height: 40.h,
-          ),
+          SizedBox(height: 40.h),
           ClipRRect(
-            borderRadius: BorderRadius.circular(
-                15.r), // Make this a large value for a full circle
+            borderRadius: BorderRadius.circular(15.r),
             child: Image.asset(
               'assets/mohamed-seddik-el-menchaoui-154.jpg',
-              width: 300.0, // Set width and height for the image
+              width: 300.0,
               height: 300.0,
-              fit: BoxFit.cover, // Ensures the image covers the container
+              fit: BoxFit.cover,
             ),
           ),
-          SizedBox(
-            height: 40.h,
-          ),
+          SizedBox(height: 40.h),
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: Row(
               children: [
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       surah,
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontFamily: 'Satoshi'),
+                      style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontFamily: 'Satoshi',
+                      ),
                     ),
-                    Text(
-                      reciter,
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontFamily: 'Satoshi'),
-                    ),
+                    // Text(
+                    //   reciter,
+                    //   style: TextStyle(
+                    //     fontSize: 20,
+                    //     color: Colors.white,
+                    //     fontFamily: 'Satoshi',
+                    //   ),
+                    // ),
                   ],
-                )
+                ),
+                SizedBox(
+                  width: 120.w,
+                ),
+                IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.favorite,
+                      size: 36.sp,
+                      color: Appcolors.secondaryColor,
+                    )),
               ],
             ),
           ),
-          SizedBox(
-            height: 70.h,
+          SizedBox(height: 70.h),
+          ProgressBar(
+            progress: progress,
+            duration: player.duration ?? Duration.zero,
+            position: player.position,
+            onChanged: (value) {
+              player.seek(
+                  Duration(seconds: value.toInt())); // Seek to new position
+            },
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               IconButton(
-                  onPressed: () {
-                    player.setLoopMode(LoopMode.one);
-                  },
-                  icon: Image.asset('assets/Repeate 3.png')),
+                onPressed: () {
+                  player.setLoopMode(LoopMode.one);
+                },
+                icon: Image.asset('assets/Repeate 3.png'),
+              ),
               IconButton(
-                  onPressed: () {}, icon: Image.asset('assets/Previous.png')),
+                onPressed: () {},
+                icon: Image.asset('assets/Previous.png'),
+              ),
               Container(
-                child: IconButton(
-                    onPressed: () async {
-                      setState(() {
-                        isPlaying ? pause() : play(audio);
-                      });
-                    },
-                    icon: Icon(
-                      isPlaying ? Icons.pause : Icons.play_arrow,
-                      color: Colors.white,
-                    )),
                 height: 70.h,
                 width: 70.w,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50.r),
-                    color: Appcolors.ButtonColor),
+                  borderRadius: BorderRadius.circular(50.r),
+                  color: Appcolors.ButtonColor,
+                ),
+                child: IconButton(
+                  onPressed: () async {
+                    setState(() {
+                      isPlaying ? pause() : play(audio);
+                    });
+                  },
+                  icon: Icon(
+                    isPlaying ? Icons.pause : Icons.play_arrow,
+                    color: Colors.white,
+                  ),
+                ),
               ),
               IconButton(
-                  onPressed: () {
-                    player.seekToNext();
-                  },
-                  icon: Image.asset('assets/Next.png')),
+                onPressed: () {
+                  player.seekToNext();
+                },
+                icon: Image.asset('assets/Next.png'),
+              ),
               IconButton(
-                  onPressed: () {
-                    player.shuffle();
-                  },
-                  icon: Image.asset('assets/Shuffle 2.png'))
+                onPressed: () {
+                  player.shuffle();
+                },
+                icon: Image.asset('assets/Shuffle 2.png'),
+              ),
             ],
-          )
+          ),
         ],
       ),
     );
