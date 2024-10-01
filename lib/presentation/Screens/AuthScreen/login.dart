@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mp3_app/appTheme.dart';
-import 'package:mp3_app/data/sharedpref/sharedprefUtils.dart';
-import 'package:mp3_app/presentation/Screens/AuthScreen/register.dart';
-import 'package:mp3_app/presentation/Screens/Homepage/homepage.dart';
+import 'package:noon/appTheme.dart';
+import 'package:noon/data/sharedpref/sharedprefUtils.dart';
+import 'package:noon/presentation/Screens/AuthScreen/dialogUtils.dart';
+import 'package:noon/presentation/Screens/AuthScreen/loginStates.dart';
+import 'package:noon/presentation/Screens/AuthScreen/register.dart';
+import 'package:noon/presentation/Screens/Homepage/homepage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -249,24 +252,29 @@ class _LoginState extends State<Login> {
                 email: EmailController!.text,
                 password: passwordController!.text);
 
-        print(credential.user?.uid ?? '');
-        String token = await credential.user!.getIdToken() ?? '';
+        // Save user details in shared preferences
+        String userToken = await credential.user!.getIdToken() ?? '';
+        await saveUserDetails(
+            credential.user!.email, credential.user!.uid, userToken);
 
-        // Save the token
-        await saveToken(token);
-
-        print('User signed in and token saved: $token');
         Navigator.pushReplacementNamed(context, Homepage.routeName);
       } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          print('No user found for that email.');
-        } else if (e.code == 'wrong-password') {
-          print('Wrong password provided for that user.');
-        } else {
-          print('Error: ${e.message}');
+        String errorMessage;
+        switch (e.code) {
+          case 'user-not-found':
+            errorMessage = 'No user found for that email.';
+            break;
+          case 'wrong-password':
+            errorMessage = 'Wrong password provided for that user.';
+            break;
+          default:
+            errorMessage = 'An error occurred. Please try again.';
         }
+        Dialogutils.showMessage(context: context, content: errorMessage);
       } catch (e) {
-        print('An unexpected error occurred: $e');
+        Dialogutils.showMessage(
+            context: context,
+            content: 'An unexpected error occurred. Please try again.');
       } finally {
         setState(() {
           isLoading = false; // Stop loading
@@ -275,12 +283,14 @@ class _LoginState extends State<Login> {
     }
   }
 
-  Future<void> saveToken(String token) async {
+  Future<void> saveUserDetails(String? email, String? uid, String token) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      Sharedprefutils.saveData(key: 'usertoken', value: token);
+      await Sharedprefutils.saveData(key: 'usertoken', value: token);
+      await Sharedprefutils.saveData(key: 'userEmail', value: email);
+      await Sharedprefutils.saveData(key: 'userUid', value: uid);
     } catch (e) {
-      print('Error saving token: $e');
+      print('Error saving user details: $e');
     }
   }
 
@@ -290,32 +300,28 @@ class _LoginState extends State<Login> {
     });
 
     try {
-      // Trigger the authentication flow
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-      // If user cancels the sign-in
       if (googleUser == null) {
-        setState(() {
-          isLoading = false;
-        });
-        return;
+        return; // User canceled the sign-in
       }
 
-      // Obtain the auth details from the request
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
-
-      // Create a new credential
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      // Once signed in, navigate to Homepage
-      await FirebaseAuth.instance.signInWithCredential(credential);
+      final userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      String? userToken = await userCredential.user!.getIdToken();
+      await saveUserDetails(userCredential.user!.email,
+          userCredential.user!.uid, userToken ?? '');
+
       Navigator.pushReplacementNamed(context, Homepage.routeName);
     } catch (error) {
-      print('Google Sign-In error: $error');
+      Dialogutils.showMessage(
+          context: context, content: 'Google Sign-In error: $error');
     } finally {
       setState(() {
         isLoading = false; // Stop loading

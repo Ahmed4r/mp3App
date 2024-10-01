@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mp3_app/appTheme.dart';
-import 'package:mp3_app/presentation/Screens/AuthScreen/login.dart';
-import 'package:mp3_app/presentation/widgets/continerInfo.dart';
+import 'package:noon/appTheme.dart';
+
 
 class Profilescreen extends StatelessWidget {
   static const String routeName = 'profile';

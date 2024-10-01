@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mp3_app/appTheme.dart';
-import 'package:mp3_app/presentation/Screens/beside_Screens/choosemode.dart';
+
+import 'package:noon/appTheme.dart';
+import 'package:noon/presentation/Screens/beside_Screens/choosemode.dart';
 
 class Getstarted extends StatelessWidget {
   static const String routeName = 'getStarted';

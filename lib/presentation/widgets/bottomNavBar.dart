@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mp3_app/presentation/Screens/Homepage/homepage.dart';
-import 'package:mp3_app/presentation/Screens/Discovry/DiscoveryScreen.dart';
-import 'package:mp3_app/presentation/Screens/favorites/favorites.dart';
-import 'package:mp3_app/presentation/Screens/profile/profileScreen.dart';
+import 'package:noon/presentation/Screens/Homepage/homepage.dart';
+import 'package:noon/presentation/Screens/favorites/favorites.dart';
+
 
 class Bottomnavbar extends StatefulWidget {
   static const String routeName = 'nav';

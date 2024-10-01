@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:mp3_app/appTheme.dart';
-import 'package:mp3_app/presentation/Screens/AuthScreen/login.dart';
-import 'package:mp3_app/presentation/Screens/Homepage/homepage.dart';
+import 'package:noon/appTheme.dart';
+import 'package:noon/presentation/Screens/AuthScreen/dialogUtils.dart';
+import 'package:noon/presentation/Screens/AuthScreen/login.dart';
+import 'package:noon/presentation/Screens/AuthScreen/registerState.dart';
+import 'package:noon/presentation/Screens/Homepage/homepage.dart';
 
 class Register extends StatefulWidget {
   static const String routeName = 'register';
@@ -258,64 +261,44 @@ class _RegisterState extends State<Register> {
 
   void checkRegister() async {
     if (formKey.currentState!.validate()) {
+      setState(() {
+        isLoading = true; // Start loading state
+      });
+
       try {
         final credential =
             await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController!.text,
           password: passwordController!.text,
         );
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'weak-password') {
-          print('The password provided is too weak.');
-        } else if (e.code == 'email-already-in-use') {
-          print('The account already exists for that email.');
-        }
-        print('form is valid');
+        // Clear the input fields
+        nameController!.clear();
+        emailController!.clear();
+        passwordController!.clear();
+
+        // Navigate to Login screen after successful registration
         Navigator.pushReplacementNamed(context, Login.routeName);
+      } on FirebaseAuthException catch (e) {
+        String message;
+        if (e.code == 'weak-password') {
+          message = 'The password provided is too weak.';
+        } else if (e.code == 'email-already-in-use') {
+          message = 'The account already exists for that email.';
+        } else {
+          message = 'An error occurred. Please try again.';
+        }
+        Dialogutils.showMessage(context: context, content: message);
       } catch (e) {
-        print(e);
+        print('Error: $e');
+        Dialogutils.showMessage(
+            context: context, content: 'An unexpected error occurred.');
+      } finally {
+        setState(() {
+          isLoading = false; // Stop loading state
+        });
       }
     } else {
-      print('form is unvalid');
-    }
-  }
-
-  Future<void> signInWithGoogle() async {
-    setState(() {
-      isLoading = true; // Start loading
-    });
-
-    try {
-      // Trigger the authentication flow
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-      // If user cancels the sign-in
-      if (googleUser == null) {
-        setState(() {
-          isLoading = false;
-        });
-        return;
-      }
-
-      // Obtain the auth details from the request
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      // Create a new credential
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      // Once signed in, navigate to Homepage
-      await FirebaseAuth.instance.signInWithCredential(credential);
-      Navigator.pushReplacementNamed(context, Homepage.routeName);
-    } catch (error) {
-      print('Google Sign-In error: $error');
-    } finally {
-      setState(() {
-        isLoading = false; // Stop loading
-      });
+      print('Form is invalid');
     }
   }
 }

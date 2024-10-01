@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mp3_app/data/Apimanager.dart';
-import 'package:mp3_app/data/model/SuwarResponse.dart';
+import 'package:noon/data/Apimanager.dart';
+import 'package:noon/data/model/SuwarResponse.dart';
 
-import 'package:mp3_app/presentation/Screens/Homepage/showSur/cubit/showsurStates.dart';
+import 'package:noon/presentation/Screens/Homepage/showSur/cubit/showsurStates.dart';
 
 class ShowsurCubit extends Cubit<Showsurstates> {
   ShowsurCubit() : super(ShowsurInitstates());

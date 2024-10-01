@@ -1,4 +1,5 @@
-import 'package:mp3_app/data/model/reciterResponse.dart';
+
+import 'package:noon/data/model/reciterResponse.dart';
 
 class Homepagestates {}
 

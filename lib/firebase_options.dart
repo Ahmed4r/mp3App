@@ -52,7 +52,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBN2NYT2aMNM8j4HOOfuQrWwqgg0MXM0A0',
-    appId: '1:550585436528:android:db68468d3c41ca7d2d67b5',
+    appId: '1:550585436528:android:5f392f7a6506e3ff2d67b5',
     messagingSenderId: '550585436528',
     projectId: 'noonapp-90ada',
     storageBucket: 'noonapp-90ada.appspot.com',
@@ -64,6 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '550585436528',
     projectId: 'noonapp-90ada',
     storageBucket: 'noonapp-90ada.appspot.com',
+    iosClientId: '550585436528-c3519vnv2ri6l2s8othk1k6vppl0d2a0.apps.googleusercontent.com',
     iosBundleId: 'com.example.mp3App',
   );
 
@@ -73,17 +74,18 @@ class DefaultFirebaseOptions {
     messagingSenderId: '550585436528',
     projectId: 'noonapp-90ada',
     storageBucket: 'noonapp-90ada.appspot.com',
+    iosClientId: '550585436528-c3519vnv2ri6l2s8othk1k6vppl0d2a0.apps.googleusercontent.com',
     iosBundleId: 'com.example.mp3App',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
     apiKey: 'AIzaSyAOOzq5gRrer4qgyN2R75alEQ5oFFrdqK0',
-    appId: '1:550585436528:web:ecff937ffdbc029b2d67b5',
+    appId: '1:550585436528:web:fbdfca8c2a7cb8b62d67b5',
     messagingSenderId: '550585436528',
     projectId: 'noonapp-90ada',
     authDomain: 'noonapp-90ada.firebaseapp.com',
     storageBucket: 'noonapp-90ada.appspot.com',
-    measurementId: 'G-CHWLJMMBG3',
+    measurementId: 'G-HJV83D89E8',
   );
 
 }

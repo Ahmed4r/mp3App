@@ -1,10 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.mp3_app"> <!-- This is the package name -->
+    package="com.example.noon"> <!-- This is the package name -->
 
     <uses-permission android:name="android.permission.INTERNET" />
     
     <application
-        android:label="mp3_app"
+        android:label="noon"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         

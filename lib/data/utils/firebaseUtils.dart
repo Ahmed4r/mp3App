@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mp3_app/data/model/favorites.dart';
+import 'package:noon/data/model/favorites.dart';
+
 
 class FirebaseUtils {
   // Get the favorites collection with the proper converter

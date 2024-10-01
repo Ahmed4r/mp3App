@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mp3_app/data/Apimanager.dart';
-import 'package:mp3_app/data/model/reciterResponse.dart';
 
-import 'package:mp3_app/presentation/Screens/Homepage/cubit/homepageStates.dart';
+import 'package:noon/data/Apimanager.dart';
+import 'package:noon/data/model/reciterResponse.dart';
+import 'package:noon/presentation/Screens/Homepage/cubit/homepageStates.dart';
 
 class Homepagecubit extends Cubit<Homepagestates> {
   Homepagecubit() : super(HomepageInitState());

@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:mp3_app/data/model/SuwarResponse.dart';
-import 'package:mp3_app/data/model/reciterResponse.dart';
+
+import 'package:noon/data/model/SuwarResponse.dart';
+import 'package:noon/data/model/reciterResponse.dart';
 
 class Apimanager {
   static String baseUrl = 'api.alquran.cloud';

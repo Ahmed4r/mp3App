@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:mp3_app/appTheme.dart';
-import 'package:mp3_app/data/sharedpref/sharedprefUtils.dart';
-import 'package:mp3_app/presentation/Screens/AuthScreen/login.dart';
 
-import 'package:mp3_app/presentation/Screens/Homepage/cubit/homepageCubit.dart';
-import 'package:mp3_app/presentation/Screens/Homepage/cubit/homepageStates.dart';
-import 'package:mp3_app/presentation/Screens/Homepage/search.dart';
-import 'package:mp3_app/presentation/Screens/Homepage/showSur/showsurah.dart';
+import 'package:noon/appTheme.dart';
+import 'package:noon/data/sharedpref/sharedprefUtils.dart';
+import 'package:noon/presentation/Screens/AuthScreen/login.dart';
+import 'package:noon/presentation/Screens/Homepage/cubit/homepageCubit.dart';
+import 'package:noon/presentation/Screens/Homepage/cubit/homepageStates.dart';
+import 'package:noon/presentation/Screens/Homepage/showSur/showsurah.dart';
 
 class Homepage extends StatelessWidget {
   static const String routeName = 'homepage';

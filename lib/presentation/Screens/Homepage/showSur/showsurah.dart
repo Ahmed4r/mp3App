@@ -2,14 +2,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mp3_app/appTheme.dart';
-import 'package:mp3_app/data/model/favorites.dart';
-import 'package:mp3_app/data/model/reciterResponse.dart';
-import 'package:mp3_app/data/utils/firebaseUtils.dart';
-import 'package:mp3_app/presentation/Screens/Homepage/showSur/cubit/showsurCubit.dart';
-import 'package:mp3_app/presentation/Screens/Homepage/showSur/cubit/showsurStates.dart';
-import 'package:mp3_app/presentation/Screens/favorites/favorites.dart';
-import 'package:mp3_app/presentation/widgets/nowplaying.dart';
+import 'package:noon/appTheme.dart';
+import 'package:noon/data/model/favorites.dart';
+import 'package:noon/data/model/reciterResponse.dart';
+import 'package:noon/data/utils/firebaseUtils.dart';
+import 'package:noon/presentation/Screens/Homepage/showSur/cubit/showsurCubit.dart';
+import 'package:noon/presentation/Screens/Homepage/showSur/cubit/showsurStates.dart';
+import 'package:noon/presentation/Screens/favorites/favorites.dart';
+import 'package:noon/presentation/widgets/nowplaying.dart';
 
 class Showsurah extends StatefulWidget {
   static const String routeName = 'showsur';

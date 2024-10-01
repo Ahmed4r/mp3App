@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:mp3_app/presentation/Screens/AuthScreen/mainauth.dart';
+
+import 'package:noon/presentation/Screens/AuthScreen/mainauth.dart';
 
 class Choosemode extends StatelessWidget {
   static const String routeName = 'choosemode';

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:mp3_app/appTheme.dart';
-import 'package:mp3_app/presentation/widgets/nowplaying.dart';
+
+import 'package:noon/appTheme.dart';
+import 'package:noon/presentation/widgets/nowplaying.dart';
 
 class CustomPlaysound extends StatelessWidget {
   String surah;
