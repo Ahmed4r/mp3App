@@ -2,9 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mp3_app/appTheme.dart';
+import 'package:mp3_app/data/sharedpref/sharedprefUtils.dart';
 import 'package:mp3_app/presentation/Screens/AuthScreen/register.dart';
 import 'package:mp3_app/presentation/Screens/Homepage/homepage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   static const String routeName = 'login';
@@ -246,19 +248,39 @@ class _LoginState extends State<Login> {
             .signInWithEmailAndPassword(
                 email: EmailController!.text,
                 password: passwordController!.text);
+
         print(credential.user?.uid ?? '');
+        String token = await credential.user!.getIdToken() ?? '';
+
+        // Save the token
+        await saveToken(token);
+
+        print('User signed in and token saved: $token');
         Navigator.pushReplacementNamed(context, Homepage.routeName);
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           print('No user found for that email.');
         } else if (e.code == 'wrong-password') {
           print('Wrong password provided for that user.');
+        } else {
+          print('Error: ${e.message}');
         }
+      } catch (e) {
+        print('An unexpected error occurred: $e');
       } finally {
         setState(() {
           isLoading = false; // Stop loading
         });
       }
+    }
+  }
+
+  Future<void> saveToken(String token) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      Sharedprefutils.saveData(key: 'usertoken', value: token);
+    } catch (e) {
+      print('Error saving token: $e');
     }
   }
 

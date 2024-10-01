@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mp3_app/data/sharedpref/sharedprefUtils.dart';
 import 'package:mp3_app/firebase_options.dart';
 import 'package:mp3_app/presentation/Screens/AuthScreen/login.dart';
 import 'package:mp3_app/presentation/Screens/AuthScreen/mainauth.dart';
@@ -19,7 +20,8 @@ import 'package:mp3_app/presentation/widgets/bottomNavBar.dart';
 import 'package:mp3_app/presentation/widgets/nowplaying.dart';
 
 class mp3App extends StatelessWidget {
-  const mp3App({super.key});
+  String route;
+  mp3App({required this.route});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class mp3App extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           home: const Splashscreen(),
           // put splash in intial
-          initialRoute: Homepage.routeName,
+          initialRoute: route,
           routes: {
             Homepage.routeName: (context) => const Bottomnavbar(),
             Showsurah.routeName: (context) => const Showsurah(),
@@ -56,6 +58,19 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await FirebaseFirestore.instance.enableNetwork();
+  await Sharedprefutils.init(); 
+  String? token =
+      Sharedprefutils.getData(key: 'userToken') as String?; 
 
-  runApp(const mp3App());
+  String initialRoute;
+  if (token == null) {
+    initialRoute = Splashscreen.routeName; 
+  } else {
+    initialRoute = Homepage.routeName; 
+  }
+
+  runApp(mp3App(route: initialRoute));
 }
+//ahmedrady03@gmail.com
+//ahmed12345
+//token = OSU593IJ2WdsboIcgy1mkkOOFpJ2

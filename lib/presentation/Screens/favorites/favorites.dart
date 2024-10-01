@@ -14,10 +14,6 @@ class Favoritescreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Appcolors.primaryColor,
-      appBar: AppBar(
-        title: const Text("Favorites"),
-        backgroundColor: Appcolors.secondaryColor,
-      ),
       body: FutureBuilder<List<Favorites>>(
         future: FirebaseUtils.fetchFavorites(),
         builder: (context, snapshot) {
@@ -43,9 +39,10 @@ class Favoritescreen extends StatelessWidget {
           final favorites = snapshot.data!;
 
           return ListView.separated(
-            padding: EdgeInsets.all(16.h),
+            padding: EdgeInsets.only(top: 70.h),
             separatorBuilder: (context, index) {
-              return const Divider(thickness: 1, color: Colors.white);
+              return const Divider(
+                  thickness: 1, color: Appcolors.secondaryColor);
             },
             itemCount: favorites.length,
             itemBuilder: (context, index) {

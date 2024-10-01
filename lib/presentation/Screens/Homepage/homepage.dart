@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:mp3_app/appTheme.dart';
+import 'package:mp3_app/data/sharedpref/sharedprefUtils.dart';
+import 'package:mp3_app/presentation/Screens/AuthScreen/login.dart';
 
 import 'package:mp3_app/presentation/Screens/Homepage/cubit/homepageCubit.dart';
 import 'package:mp3_app/presentation/Screens/Homepage/cubit/homepageStates.dart';
@@ -29,16 +31,18 @@ class Homepage extends StatelessWidget {
                   SizedBox(height: 60.h),
                   Row(
                     children: [
-                      // IconButton(
-                      //   onPressed: () {
-                      //     Navigator.pushNamed(context, Search.routeName);
-                      //   },
-                      //   icon: Icon(
-                      //     Icons.search_outlined,
-                      //     size: 30.sp,
-                      //     color: Appcolors.whiteColor,
-                      //   ),
-                      // ),
+                      IconButton(
+                        onPressed: () {
+                          Sharedprefutils.removeData(key: 'usertoken');
+                          Navigator.pushReplacementNamed(
+                              context, Login.routeName);
+                        },
+                        icon: Icon(
+                          Icons.logout,
+                          size: 25.sp,
+                          color: Appcolors.whiteColor,
+                        ),
+                      ),
                     ],
                   ),
                   SizedBox(height: 30.h),

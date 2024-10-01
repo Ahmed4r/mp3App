@@ -16,9 +16,9 @@ class _BottomnavbarState extends State<Bottomnavbar> {
   int currentIndex = 0;
   List<Widget> screens = [
     Homepage(),
-    DonwloadScreen(),
+    // DonwloadScreen(),
     Favoritescreen(),
-    Profilescreen(),
+    // Profilescreen(),
   ];
 
   void onTap(int index) {
@@ -45,20 +45,20 @@ class _BottomnavbarState extends State<Bottomnavbar> {
             icon: Image.asset('assets/Home.png'),
             label: 'Home',
           ),
-          BottomNavigationBarItem(
-            icon: Image.asset(
-              'assets/Discovery.png',
-            ),
-            label: 'Discovry',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Image.asset(
+          //     'assets/Discovery.png',
+          //   ),
+          //   label: 'Discovry',
+          // ),
           BottomNavigationBarItem(
             icon: Image.asset('assets/Heart.png'),
             label: 'Favorites',
           ),
-          BottomNavigationBarItem(
-            icon: Image.asset('assets/Profile.png'),
-            label: 'Profile',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Image.asset('assets/Profile.png'),
+          //   label: 'Profile',
+          // ),
         ],
       ),
     );
