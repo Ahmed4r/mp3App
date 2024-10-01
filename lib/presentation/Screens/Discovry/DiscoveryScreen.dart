@@ -1,11 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:mp3_app/appTheme.dart';
 
-class DiscoveryScreen extends StatelessWidget {
+class DonwloadScreen extends StatefulWidget {
   static const String routeName = 'downloaded';
-   const DiscoveryScreen({super.key});
+  DonwloadScreen({super.key});
 
   @override
+  State<DonwloadScreen> createState() => _DonwloadScreenState();
+}
+
+class _DonwloadScreenState extends State<DonwloadScreen> {
+  @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    var arguments =
+        ModalRoute.of(context)?.settings.arguments as Map<dynamic, dynamic>?;
+    String url = arguments?['url'] ?? '';
+    var reciterName = arguments?['reciterName'] ?? '';
+    var surahName = arguments?['surahName'] ?? '';
+
+    return Scaffold(
+      backgroundColor: Appcolors.primaryColor,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SizedBox(
+            height: 40.h,
+          ),
+          Text(
+            '    Download section coming soon',
+            style: TextStyle(color: Colors.white, fontSize: 22.sp),
+          ),
+        ],
+      ),
+    );
   }
 }

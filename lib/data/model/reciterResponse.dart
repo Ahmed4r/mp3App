@@ -7,15 +7,15 @@ class reciterResponse {
     if (json['reciters'] != null) {
       reciters = <Reciters>[];
       json['reciters'].forEach((v) {
-        reciters!.add(new Reciters.fromJson(v));
+        reciters!.add(Reciters.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.reciters != null) {
-      data['reciters'] = this.reciters!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (reciters != null) {
+      data['reciters'] = reciters!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -38,19 +38,19 @@ class Reciters {
     if (json['moshaf'] != null) {
       moshaf = <Moshaf>[];
       json['moshaf'].forEach((v) {
-        moshaf!.add(new Moshaf.fromJson(v));
+        moshaf!.add(Moshaf.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['letter'] = this.letter;
-    data['date'] = this.date;
-    if (this.moshaf != null) {
-      data['moshaf'] = this.moshaf!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['letter'] = letter;
+    data['date'] = date;
+    if (moshaf != null) {
+      data['moshaf'] = moshaf!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -82,13 +82,13 @@ class Moshaf {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['server'] = this.server;
-    data['surah_total'] = this.surahTotal;
-    data['moshaf_type'] = this.moshafType;
-    data['surah_list'] = this.surahList;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['server'] = server;
+    data['surah_total'] = surahTotal;
+    data['moshaf_type'] = moshafType;
+    data['surah_list'] = surahList;
     return data;
   }
 }

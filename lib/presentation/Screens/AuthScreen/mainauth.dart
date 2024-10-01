@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mp3_app/presentation/Screens/AuthScreen/login.dart';
 import 'package:mp3_app/presentation/Screens/AuthScreen/register.dart';
-import 'package:mp3_app/presentation/Screens/beside_Screens/getStarted.dart';
 
 class Mainauth extends StatelessWidget {
   static const String routeName = 'mianAuth';

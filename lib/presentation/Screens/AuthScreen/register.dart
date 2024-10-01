@@ -1,12 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mp3_app/appTheme.dart';
-
-import 'package:mp3_app/main.dart';
 import 'package:mp3_app/presentation/Screens/AuthScreen/login.dart';
-import 'package:mp3_app/presentation/Screens/Homepage/cubit/showSur/showsurah.dart';
 import 'package:mp3_app/presentation/Screens/Homepage/homepage.dart';
-import 'package:mp3_app/presentation/widgets/customTextField.dart';
 
 class Register extends StatefulWidget {
   static const String routeName = 'register';
@@ -26,6 +24,7 @@ class _RegisterState extends State<Register> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   bool issecured = false;
+  bool isLoading = false; // For handling loading state
 
   bool isSecured() {
     return issecured = !issecured;
@@ -216,7 +215,11 @@ class _RegisterState extends State<Register> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   InkWell(
-                      onTap: () {}, child: Image.asset('assets/google.png')),
+                      onTap: () {
+                        Navigator.pushReplacementNamed(
+                            context, Homepage.routeName);
+                      },
+                      child: Image.asset('assets/google.png')),
                   SizedBox(
                     width: 60.w,
                   ),
@@ -253,12 +256,66 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  void checkRegister() {
+  void checkRegister() async {
     if (formKey.currentState!.validate()) {
-      print('form is valid');
-      Navigator.pushReplacementNamed(context, Showsurah.routeName);
+      try {
+        final credential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController!.text,
+          password: passwordController!.text,
+        );
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          print('The password provided is too weak.');
+        } else if (e.code == 'email-already-in-use') {
+          print('The account already exists for that email.');
+        }
+        print('form is valid');
+        Navigator.pushReplacementNamed(context, Login.routeName);
+      } catch (e) {
+        print(e);
+      }
     } else {
       print('form is unvalid');
+    }
+  }
+
+  Future<void> signInWithGoogle() async {
+    setState(() {
+      isLoading = true; // Start loading
+    });
+
+    try {
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      // If user cancels the sign-in
+      if (googleUser == null) {
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Once signed in, navigate to Homepage
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      Navigator.pushReplacementNamed(context, Homepage.routeName);
+    } catch (error) {
+      print('Google Sign-In error: $error');
+    } finally {
+      setState(() {
+        isLoading = false; // Stop loading
+      });
     }
   }
 }

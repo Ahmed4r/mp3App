@@ -1,9 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mp3_app/appTheme.dart';
-import 'package:mp3_app/presentation/Screens/Homepage/cubit/showSur/showsurah.dart';
-
+import 'package:mp3_app/presentation/Screens/AuthScreen/register.dart';
 import 'package:mp3_app/presentation/Screens/Homepage/homepage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Login extends StatefulWidget {
   static const String routeName = 'login';
@@ -14,14 +15,11 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  TextEditingController? EmailController =
-      TextEditingController(text: 'ahmedrady03@gmail.com');
-
-  TextEditingController? passwordController =
-      TextEditingController(text: '12345678');
-
+  TextEditingController? EmailController = TextEditingController();
+  TextEditingController? passwordController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool issecured = true;
+  bool isLoading = false; // For handling loading state
 
   bool isSecured() {
     return issecured = !issecured;
@@ -36,9 +34,6 @@ class _LoginState extends State<Login> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                height: 30.h,
-              ),
               Image.asset(
                 'assets/ن.png',
                 scale: 5,
@@ -52,7 +47,7 @@ class _LoginState extends State<Login> {
                     color: Colors.white, fontFamily: 'Satoshi', fontSize: 30),
               ),
               SizedBox(
-                height: 40.h,
+                height: 25.h,
               ),
               Form(
                   key: formKey,
@@ -151,25 +146,27 @@ class _LoginState extends State<Login> {
               SizedBox(
                 height: 30.h,
               ),
-              InkWell(
-                onTap: () {
-                  checkLogin();
-                },
-                child: Container(
-                  width: 329.w,
-                  height: 92.h,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(35.sp),
-                      color: Appcolors.ButtonColor),
-                  child: const Center(
-                    child: Text('Sign In',
-                        style: TextStyle(
-                            fontFamily: 'Satoshi',
-                            color: Colors.white,
-                            fontSize: 20)),
-                  ),
-                ),
-              ),
+              isLoading
+                  ? CircularProgressIndicator()
+                  : InkWell(
+                      onTap: () {
+                        checkLogin();
+                      },
+                      child: Container(
+                        width: 329.w,
+                        height: 92.h,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(35.sp),
+                            color: Appcolors.ButtonColor),
+                        child: const Center(
+                          child: Text('Sign In',
+                              style: TextStyle(
+                                  fontFamily: 'Satoshi',
+                                  color: Colors.white,
+                                  fontSize: 20)),
+                        ),
+                      ),
+                    ),
               SizedBox(
                 height: 30.h,
               ),
@@ -198,16 +195,40 @@ class _LoginState extends State<Login> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset('assets/google.png'),
+                  InkWell(
+                      onTap: () {
+                        signInWithGoogle();
+                      },
+                      child: Image.asset('assets/google.png')),
                   SizedBox(
-                    width: 60.w,
+                    width: 50.w,
                   ),
                   Image.asset('assets/apple.png'),
                 ],
               ),
               SizedBox(
-                height: 40.h,
+                height: 10.h,
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Don't have account ?",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontFamily: 'Satoshi'),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, Register.routeName);
+                      },
+                      child: const Text(
+                        'Register',
+                        style: TextStyle(fontSize: 14, fontFamily: 'Satoshi'),
+                      ))
+                ],
+              )
             ],
           ),
         ),
@@ -215,12 +236,68 @@ class _LoginState extends State<Login> {
     );
   }
 
-  void checkLogin() {
+  void checkLogin() async {
     if (formKey.currentState!.validate()) {
-      print('form is valid');
-      Navigator.pushReplacementNamed(context, Showsurah.routeName);
-    } else {
-      print('form is unvalid');
+      setState(() {
+        isLoading = true; // Start loading
+      });
+      try {
+        final credential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+                email: EmailController!.text,
+                password: passwordController!.text);
+        print(credential.user?.uid ?? '');
+        Navigator.pushReplacementNamed(context, Homepage.routeName);
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          print('No user found for that email.');
+        } else if (e.code == 'wrong-password') {
+          print('Wrong password provided for that user.');
+        }
+      } finally {
+        setState(() {
+          isLoading = false; // Stop loading
+        });
+      }
+    }
+  }
+
+  Future<void> signInWithGoogle() async {
+    setState(() {
+      isLoading = true; // Start loading
+    });
+
+    try {
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+      // If user cancels the sign-in
+      if (googleUser == null) {
+        setState(() {
+          isLoading = false;
+        });
+        return;
+      }
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Once signed in, navigate to Homepage
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      Navigator.pushReplacementNamed(context, Homepage.routeName);
+    } catch (error) {
+      print('Google Sign-In error: $error');
+    } finally {
+      setState(() {
+        isLoading = false; // Stop loading
+      });
     }
   }
 }

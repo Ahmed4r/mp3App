@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mp3_app/data/Apimanager.dart';
-import 'package:mp3_app/data/model/SuwarResponse.dart';
 import 'package:mp3_app/data/model/reciterResponse.dart';
 
 import 'package:mp3_app/presentation/Screens/Homepage/cubit/homepageStates.dart';

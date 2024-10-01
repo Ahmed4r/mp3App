@@ -1,0 +1,175 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:mp3_app/appTheme.dart';
+import 'package:mp3_app/data/model/favorites.dart';
+import 'package:mp3_app/data/model/reciterResponse.dart';
+import 'package:mp3_app/data/utils/firebaseUtils.dart';
+import 'package:mp3_app/presentation/Screens/Homepage/showSur/cubit/showsurCubit.dart';
+import 'package:mp3_app/presentation/Screens/Homepage/showSur/cubit/showsurStates.dart';
+import 'package:mp3_app/presentation/Screens/favorites/favorites.dart';
+import 'package:mp3_app/presentation/widgets/nowplaying.dart';
+
+class Showsurah extends StatefulWidget {
+  static const String routeName = 'showsur';
+
+  const Showsurah({super.key});
+
+  @override
+  State<Showsurah> createState() => _ShowsurahState();
+}
+
+class _ShowsurahState extends State<Showsurah> {
+  @override
+  Widget build(BuildContext context) {
+    final args =
+        ModalRoute.of(context)?.settings.arguments as Map<dynamic, dynamic>? ??
+            {};
+    final Moshaf? moshaf = args['mp3list'] is Moshaf ? args['mp3list'] : null;
+    final String reciter = args['reciter'] ?? 'Unknown Reciter';
+
+    return BlocProvider(
+      create: (context) {
+        return ShowsurCubit()..getSwarData();
+      },
+      child: BlocBuilder<ShowsurCubit, Showsurstates>(
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: const Color(0xff1C1B1B),
+            body: Column(
+              children: [
+                SizedBox(height: 30.h),
+                if (state is ShowsurLoadingstates) ...[
+                  const Center(child: CircularProgressIndicator()),
+                ] else if (state is ShowsurSucessstates) ...[
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20.h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Suwar you can listen to by \n$reciter',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: Fontstyle.fontname,
+                            fontSize: 18.sp,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(
+                            Icons.home,
+                            color: Appcolors.secondaryColor,
+                            size: 30.sp,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: state.response.suwar?.length ?? 0,
+                      itemBuilder: (context, index) {
+                        final surah = state.response.suwar![index];
+                        final String surahName =
+                            surah.name ?? 'Surah name unknown';
+                        final int surahId = surah.id ?? 0;
+                        final String formattedNumber =
+                            surahId.toString().padLeft(3, '0');
+                        final String url =
+                            '${moshaf!.server}/$formattedNumber.mp3';
+
+                        return Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10.h),
+                          child: Card(
+                            color: const Color(0xff2C2C2C),
+                            child: ListTile(
+                              title: Text(
+                                surahName,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontFamily: Fontstyle.fontname,
+                                  fontSize: 18.sp,
+                                ),
+                              ),
+                              subtitle: Text(surahId.toString()),
+                              trailing: IconButton(
+                                onPressed: () async {
+                                  try {
+                                    // Check for missing or empty fields
+                                    if (surahName.isEmpty ||
+                                        reciter.isEmpty ||
+                                        url.isEmpty) {
+                                      throw Exception(
+                                          "Invalid favorite: Missing or empty fields");
+                                    }
+
+                                    // Create the Favorites object
+                                    final favorite = Favorites(
+                                      surahName: surahName,
+                                      reciterName: reciter,
+                                      url: url,
+                                    );
+
+                                    await FirebaseUtils.addSurahToFirestore(
+                                        favorite);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              '$surahName added to favorites')),
+                                    );
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Failed to add to favorites: $e')),
+                                    );
+                                  }
+                                },
+                                icon: Icon(
+                                  Icons.favorite,
+                                  color: Appcolors.secondaryColor,
+                                ),
+                              ),
+                              onTap: () {
+                                Navigator.pushNamed(
+                                  context,
+                                  Nowplaying.routeName,
+                                  arguments: {
+                                    'server': moshaf!.server,
+                                    'url': url,
+                                    'reciter': reciter,
+                                    'surah': surahName,
+                                    'id': surahId,
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ] else if (state is ShowsurErrorstates) ...[
+                  Center(
+                    child: Text(
+                      'Failed to load reciters: ${state.ErrorMessage}',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontFamily: Fontstyle.fontname,
+                        fontSize: 16.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

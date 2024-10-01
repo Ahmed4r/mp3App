@@ -16,9 +16,9 @@ class _BottomnavbarState extends State<Bottomnavbar> {
   int currentIndex = 0;
   List<Widget> screens = [
     Homepage(),
-    DiscoveryScreen(),
-    const FavoritesScreen(),
-    const Profilescreen(),
+    DonwloadScreen(),
+    Favoritescreen(),
+    Profilescreen(),
   ];
 
   void onTap(int index) {

@@ -1,5 +1,4 @@
 import 'package:mp3_app/data/model/SuwarResponse.dart';
-import 'package:mp3_app/data/model/reciterResponse.dart';
 
 class Showsurstates {}
 

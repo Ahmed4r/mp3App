@@ -12,4 +12,5 @@ class Appcolors {
   static const whiteColor = Colors.white;
   static const ButtonColor = Color(0xff16423C);
   static const favContiner = Color(0xff2C2C2C);
+  static const darkgreen = Color(0xff15413B);
 }

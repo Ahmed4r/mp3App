@@ -7,9 +7,7 @@ import 'package:mp3_app/appTheme.dart';
 import 'package:mp3_app/presentation/Screens/Homepage/cubit/homepageCubit.dart';
 import 'package:mp3_app/presentation/Screens/Homepage/cubit/homepageStates.dart';
 import 'package:mp3_app/presentation/Screens/Homepage/search.dart';
-import 'package:mp3_app/presentation/Screens/Homepage/cubit/showSur/showsurah.dart';
-import 'package:mp3_app/presentation/playScreen/playScreen.dart';
-import 'package:mp3_app/presentation/widgets/nowplaying.dart';
+import 'package:mp3_app/presentation/Screens/Homepage/showSur/showsurah.dart';
 
 class Homepage extends StatelessWidget {
   static const String routeName = 'homepage';
@@ -31,21 +29,21 @@ class Homepage extends StatelessWidget {
                   SizedBox(height: 60.h),
                   Row(
                     children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, Search.routeName);
-                        },
-                        icon: Icon(
-                          Icons.search_outlined,
-                          size: 30.sp,
-                          color: Appcolors.whiteColor,
-                        ),
-                      ),
+                      // IconButton(
+                      //   onPressed: () {
+                      //     Navigator.pushNamed(context, Search.routeName);
+                      //   },
+                      //   icon: Icon(
+                      //     Icons.search_outlined,
+                      //     size: 30.sp,
+                      //     color: Appcolors.whiteColor,
+                      //   ),
+                      // ),
                     ],
                   ),
                   SizedBox(height: 30.h),
                   Text(
-                    'القراء',
+                    'Reciters',
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: Fontstyle.fontname,
@@ -91,7 +89,7 @@ class Homepage extends StatelessWidget {
                                           Navigator.pushNamed(
                                               context, Showsurah.routeName,
                                               arguments: {
-                                                'reciter':reciterName,
+                                                'reciter': reciterName,
                                                 'mp3list': reciter.moshaf![0],
                                                 'surahList':
                                                     reciter.moshaf![0].surahList

@@ -7,15 +7,15 @@ class SuwarResponse {
     if (json['suwar'] != null) {
       suwar = <Suwar>[];
       json['suwar'].forEach((v) {
-        suwar!.add(new Suwar.fromJson(v));
+        suwar!.add(Suwar.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.suwar != null) {
-      data['suwar'] = this.suwar!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (suwar != null) {
+      data['suwar'] = suwar!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -47,13 +47,13 @@ class Suwar {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['start_page'] = this.startPage;
-    data['end_page'] = this.endPage;
-    data['makkia'] = this.makkia;
-    data['type'] = this.type;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['start_page'] = startPage;
+    data['end_page'] = endPage;
+    data['makkia'] = makkia;
+    data['type'] = type;
     return data;
   }
 }
