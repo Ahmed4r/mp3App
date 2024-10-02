@@ -43,9 +43,9 @@ class FirebaseUtils {
   static Future<List<Favorites>> fetchFavorites() async {
     try {
       QuerySnapshot<Favorites> snapshot = await getFavoritesCollection().get();
-      snapshot.docs.forEach((doc) {
+      for (var doc in snapshot.docs) {
         print('Fetched favorite: ${doc.data()}'); // Log each fetched favorite
-      });
+      }
       return snapshot.docs.map((doc) => doc.data()).toList();
     } catch (e) {
       print('Error fetching favorites: $e'); // Improved logging

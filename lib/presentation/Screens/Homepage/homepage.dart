@@ -5,16 +5,17 @@ import 'package:just_audio/just_audio.dart';
 
 import 'package:noon/appTheme.dart';
 import 'package:noon/data/sharedpref/sharedprefUtils.dart';
-import 'package:noon/presentation/Screens/AuthScreen/login.dart';
 import 'package:noon/presentation/Screens/Homepage/cubit/homepageCubit.dart';
 import 'package:noon/presentation/Screens/Homepage/cubit/homepageStates.dart';
 import 'package:noon/presentation/Screens/Homepage/showSur/showsurah.dart';
+import 'package:noon/presentation/Screens/splashScreen/splashScreen.dart';
 
 class Homepage extends StatelessWidget {
   static const String routeName = 'homepage';
   Homepage({super.key});
 
-  final player = AudioPlayer();
+  final player =
+      AudioPlayer(); // Remember to dispose of this in a StatefulWidget
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +29,16 @@ class Homepage extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(height: 60.h),
+                  // Logout button
                   Row(
                     children: [
                       IconButton(
                         onPressed: () {
                           Sharedprefutils.removeData(key: 'usertoken');
+                          // Reset state before navigating
+                          context.read<Homepagecubit>().resetState();
                           Navigator.pushReplacementNamed(
-                              context, Login.routeName);
+                              context, Splashscreen.routeName);
                         },
                         icon: Icon(
                           Icons.logout,
@@ -45,6 +49,7 @@ class Homepage extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 30.h),
+                  // Header Text
                   Text(
                     'Reciters',
                     style: TextStyle(
@@ -54,66 +59,118 @@ class Homepage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 10.h),
+                  // Conditional rendering for states
                   state is HomepageLoadingState
-                      ? const Center(child: CircularProgressIndicator())
-                      : state is HomepageSuccessState
-                          ? SizedBox(
-                              height: 700.h,
-                              child: ListView.builder(
-                                itemCount: state.response.reciters?.length ?? 0,
-                                itemBuilder: (context, index) {
-                                  final reciter =
-                                      state.response.reciters![index];
-
-                                  String reciterName =
-                                      reciter.name ?? 'No Name';
-                                  String SurahId =
-                                      reciter.id.toString() ?? 'No Name';
-
-                                  return Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(vertical: 10.h),
-                                    child: Card(
-                                      color: const Color(0xff2C2C2C),
-                                      child: ListTile(
-                                        title: Text(
-                                          reciterName,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontFamily: Fontstyle.fontname,
-                                            fontSize: 18.sp,
-                                          ),
-                                        ),
-                                        trailing: const Icon(
-                                          Icons.open_in_full,
-                                          color: Colors.green,
-                                        ),
-                                        onTap: () {
-                                          Navigator.pushNamed(
-                                              context, Showsurah.routeName,
-                                              arguments: {
-                                                'reciter': reciterName,
-                                                'mp3list': reciter.moshaf![0],
-                                                'surahList':
-                                                    reciter.moshaf![0].surahList
-                                              });
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                },
+                      ? const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(),
+                              SizedBox(height: 20),
+                              Text(
+                                'Fetching reciters...',
+                                style: TextStyle(color: Colors.white),
                               ),
-                            )
-                          : Center(
+                            ],
+                          ),
+                        )
+                      : state is HomepageSuccessState &&
+                              state.response.reciters?.isEmpty == true
+                          ? Center(
                               child: Text(
-                                'Failed to load reciters',
+                                'No reciters available at the moment',
                                 style: TextStyle(
-                                  color: Colors.red,
+                                  color: Colors.white,
                                   fontFamily: Fontstyle.fontname,
                                   fontSize: 16.sp,
                                 ),
                               ),
-                            ),
+                            )
+                          : state is HomepageSuccessState
+                              ? SizedBox(
+                                  height: 700.h,
+                                  child: ListView.builder(
+                                    itemCount:
+                                        state.response.reciters?.length ?? 0,
+                                    itemBuilder: (context, index) {
+                                      final reciter =
+                                          state.response.reciters![index];
+
+                                      String reciterName =
+                                          reciter.name ?? 'Unknown Reciter';
+
+                                      // Check for null moshaf
+                                      return Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 10.h),
+                                        child: Card(
+                                          color: const Color(0xff2C2C2C),
+                                          child: ListTile(
+                                            title: Text(
+                                              reciterName,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontFamily: Fontstyle.fontname,
+                                                fontSize: 18.sp,
+                                              ),
+                                            ),
+                                            trailing: const Icon(
+                                              Icons.open_in_full,
+                                              color: Colors.green,
+                                            ),
+                                            onTap: () {
+                                              // Check if moshaf exists
+                                              if (reciter.moshaf != null &&
+                                                  reciter.moshaf!.isNotEmpty) {
+                                                Navigator.pushNamed(context,
+                                                    Showsurah.routeName,
+                                                    arguments: {
+                                                      'reciter': reciterName,
+                                                      'mp3list':
+                                                          reciter.moshaf![0],
+                                                      'surahList': reciter
+                                                          .moshaf![0].surahList
+                                                    });
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                        'No surah data available for this reciter'),
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
+                              : Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Failed to load reciters',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                          fontFamily: Fontstyle.fontname,
+                                          fontSize: 16.sp,
+                                        ),
+                                      ),
+                                      SizedBox(height: 20.h),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          context
+                                              .read<Homepagecubit>()
+                                              .getRecitersData();
+                                        },
+                                        child: Text('Retry'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                 ],
               ),
             ),

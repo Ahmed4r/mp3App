@@ -139,7 +139,7 @@ class _ShowsurahState extends State<Showsurah> {
                                   context,
                                   Nowplaying.routeName,
                                   arguments: {
-                                    'server': moshaf!.server,
+                                    'server': moshaf.server,
                                     'url': url,
                                     'reciter': reciter,
                                     'surah': surahName,

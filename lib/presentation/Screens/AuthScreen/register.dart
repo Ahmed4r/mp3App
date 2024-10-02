@@ -1,12 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:noon/appTheme.dart';
 import 'package:noon/presentation/Screens/AuthScreen/dialogUtils.dart';
 import 'package:noon/presentation/Screens/AuthScreen/login.dart';
-import 'package:noon/presentation/Screens/AuthScreen/registerState.dart';
 import 'package:noon/presentation/Screens/Homepage/homepage.dart';
 
 class Register extends StatefulWidget {
@@ -73,6 +70,7 @@ class _RegisterState extends State<Register> {
                         child: Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: TextFormField(
+                            textInputAction: TextInputAction.next,
                             style: const TextStyle(color: Colors.white),
                             decoration: const InputDecoration(
                               hintText: 'Enter Your Name',
@@ -103,6 +101,7 @@ class _RegisterState extends State<Register> {
                         child: Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: TextFormField(
+                            textInputAction: TextInputAction.next,
                             style: const TextStyle(color: Colors.white),
                             decoration: const InputDecoration(
                               hintText: 'Enter Your Email',

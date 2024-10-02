@@ -1,11 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:noon/appTheme.dart';
 import 'package:noon/data/sharedpref/sharedprefUtils.dart';
 import 'package:noon/presentation/Screens/AuthScreen/dialogUtils.dart';
-import 'package:noon/presentation/Screens/AuthScreen/loginStates.dart';
 import 'package:noon/presentation/Screens/AuthScreen/register.dart';
 import 'package:noon/presentation/Screens/Homepage/homepage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -69,6 +67,7 @@ class _LoginState extends State<Login> {
                         child: Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: TextFormField(
+                            textInputAction: TextInputAction.next,
                             style:
                                 TextStyle(color: Colors.white, fontSize: 18.sp),
                             decoration: const InputDecoration(
@@ -107,6 +106,7 @@ class _LoginState extends State<Login> {
                         child: Padding(
                           padding: const EdgeInsets.all(14.0),
                           child: TextFormField(
+                            textInputAction: TextInputAction.next,
                             obscureText: issecured,
                             style:
                                 TextStyle(color: Colors.white, fontSize: 18.sp),
@@ -286,11 +286,16 @@ class _LoginState extends State<Login> {
   Future<void> saveUserDetails(String? email, String? uid, String token) async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      await Sharedprefutils.saveData(key: 'usertoken', value: token);
+      await Sharedprefutils.saveData(
+          key: 'usertoken', value: token); // Use consistent key 'usertoken'
       await Sharedprefutils.saveData(key: 'userEmail', value: email);
       await Sharedprefutils.saveData(key: 'userUid', value: uid);
     } catch (e) {
+      // Show error message in the UI or log it
       print('Error saving user details: $e');
+      Dialogutils.showMessage(
+          context: context,
+          content: 'Error saving user details. Please try again.');
     }
   }
 

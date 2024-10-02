@@ -8,7 +8,7 @@ import 'package:noon/presentation/widgets/nowplaying.dart';
 class Favoritescreen extends StatelessWidget {
   static const String routeName = 'favoritesList';
 
-  Favoritescreen({super.key});
+  const Favoritescreen({super.key});
 
   @override
   Widget build(BuildContext context) {

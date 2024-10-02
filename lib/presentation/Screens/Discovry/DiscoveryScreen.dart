@@ -6,7 +6,7 @@ import 'package:noon/appTheme.dart';
 
 class DonwloadScreen extends StatefulWidget {
   static const String routeName = 'downloaded';
-  DonwloadScreen({super.key});
+  const DonwloadScreen({super.key});
 
   @override
   State<DonwloadScreen> createState() => _DonwloadScreenState();
