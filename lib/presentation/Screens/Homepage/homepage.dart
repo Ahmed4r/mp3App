@@ -5,10 +5,12 @@ import 'package:just_audio/just_audio.dart';
 
 import 'package:noon/appTheme.dart';
 import 'package:noon/data/sharedpref/sharedprefUtils.dart';
+import 'package:noon/data/userprovider.dart';
 import 'package:noon/presentation/Screens/Homepage/cubit/homepageCubit.dart';
 import 'package:noon/presentation/Screens/Homepage/cubit/homepageStates.dart';
 import 'package:noon/presentation/Screens/Homepage/showSur/showsurah.dart';
 import 'package:noon/presentation/Screens/splashScreen/splashScreen.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Homepage extends StatelessWidget {
@@ -20,6 +22,7 @@ class Homepage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return BlocProvider(
       create: (context) => Homepagecubit()..getRecitersData(),
       child: BlocBuilder<Homepagecubit, Homepagestates>(

@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:noon/appTheme.dart';
+import 'package:noon/data/model/myuser.dart';
+import 'package:noon/data/utils/firebaseUtils.dart';
 import 'package:noon/presentation/Screens/AuthScreen/dialogUtils.dart';
 import 'package:noon/presentation/Screens/AuthScreen/login.dart';
 import 'package:noon/presentation/Screens/Homepage/homepage.dart';
@@ -270,6 +272,13 @@ class _RegisterState extends State<Register> {
           email: emailController!.text,
           password: passwordController!.text,
         );
+        Myuser myuser = Myuser(
+            email: emailController!.text,
+            password: passwordController!.text,
+            id: credential.user?.uid ?? '');
+        print('before');
+        await FirebaseUtils.addUserToFireStore(myuser);
+        print('afterrrrrrrrrrr');
         // Clear the input fields
         nameController!.clear();
         emailController!.clear();

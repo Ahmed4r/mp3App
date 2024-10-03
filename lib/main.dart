@@ -2,8 +2,10 @@ import 'package:audio_service/audio_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:noon/data/sharedpref/sharedprefUtils.dart';
+import 'package:noon/data/userprovider.dart';
 import 'package:noon/firebase_options.dart';
 import 'package:noon/presentation/Screens/AuthScreen/login.dart';
 import 'package:noon/presentation/Screens/AuthScreen/mainauth.dart';
@@ -18,6 +20,7 @@ import 'package:noon/presentation/Screens/favorites/favorites.dart';
 import 'package:noon/presentation/Screens/splashScreen/splashScreen.dart';
 import 'package:noon/presentation/widgets/bottomNavBar.dart';
 import 'package:noon/presentation/widgets/nowplaying.dart';
+import 'package:provider/provider.dart';
 
 class Mp3App extends StatelessWidget {
   final String route;
@@ -83,5 +86,9 @@ Future<void> main() async {
         androidNotificationOngoing: true,
       ));
 
-  runApp(Mp3App(route: initialRoute));
+  runApp(
+    Mp3App(
+      route: initialRoute,
+    ),
+  );
 }

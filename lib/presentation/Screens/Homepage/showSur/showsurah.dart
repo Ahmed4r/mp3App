@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:noon/appTheme.dart';
 import 'package:noon/data/model/favorites.dart';
 import 'package:noon/data/model/reciterResponse.dart';
+import 'package:noon/data/userprovider.dart';
 import 'package:noon/data/utils/firebaseUtils.dart';
 import 'package:noon/presentation/Screens/Homepage/showSur/cubit/showsurCubit.dart';
 import 'package:noon/presentation/Screens/Homepage/showSur/cubit/showsurStates.dart';
@@ -21,6 +22,56 @@ class Showsurah extends StatefulWidget {
 }
 
 class _ShowsurahState extends State<Showsurah> {
+  late Future<List<Favorites>> favoritesList;
+  Map<String, bool> favoriteStatusMap = {};
+
+  Future<bool> checkIfFavorite(String surahName, String reciter) async {
+    try {
+      final favorites = await FirebaseUtils.fetchFavorites();
+      return favorites.any(
+          (fav) => fav.surahName == surahName && fav.reciterName == reciter);
+    } catch (e) {
+      print('Error fetching favorites: $e');
+      return false; // Consider it not favorite if there's an error
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    favoritesList = FirebaseUtils
+        .fetchFavorites(); // Pre-fetch favorites list // Pre-fetch favorites list
+  }
+
+  Future<bool> toggleFavorite(
+      String url, String surahName, String reciter) async {
+    bool isFav =
+        favoriteStatusMap[surahName] ?? false; // Get current favorite status
+
+    if (isFav) {
+      // Remove from favorites
+      await FirebaseUtils.removeFavorite(
+        Favorites(surahName: surahName, reciterName: reciter, url: url),
+      );
+      // ...
+      favoriteStatusMap[surahName] = false; // Update the favorite status
+    } else {
+      // Add to favorites
+      await FirebaseUtils.addSurahToFirestore(
+        Favorites(
+          surahName: surahName,
+          reciterName: reciter,
+          url: url,
+        ),
+      );
+      // ...
+      favoriteStatusMap[surahName] = true; // Update the favorite status
+    }
+
+    setState(() {}); // Trigger a rebuild to update the UI
+    return !isFav; // Return the new favorite status
+  }
+
   @override
   Widget build(BuildContext context) {
     final args =
@@ -30,9 +81,7 @@ class _ShowsurahState extends State<Showsurah> {
     final String reciter = args['reciter'] ?? 'Unknown Reciter';
 
     return BlocProvider(
-      create: (context) {
-        return ShowsurCubit()..getSwarData();
-      },
+      create: (context) => ShowsurCubit()..getSwarData(),
       child: BlocBuilder<ShowsurCubit, Showsurstates>(
         builder: (context, state) {
           return Scaffold(
@@ -57,15 +106,13 @@ class _ShowsurahState extends State<Showsurah> {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                          onPressed: () => Navigator.pop(context),
                           icon: Icon(
                             Icons.home,
                             color: Appcolors.secondaryColor,
                             size: 30.sp,
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
@@ -98,47 +145,36 @@ class _ShowsurahState extends State<Showsurah> {
                               subtitle: Text(
                                 surahId.toString(),
                                 style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 11.sp,
-                                    fontFamily: Fontstyle.fontname),
-                              ),
-                              trailing: IconButton(
-                                onPressed: () async {
-                                  try {
-                                    // Check for missing or empty fields
-                                    if (surahName.isEmpty ||
-                                        reciter.isEmpty ||
-                                        url.isEmpty) {
-                                      throw Exception(
-                                          "Invalid favorite: Missing or empty fields");
-                                    }
-
-                                    // Create the Favorites object
-                                    final favorite = Favorites(
-                                      surahName: surahName,
-                                      reciterName: reciter,
-                                      url: url,
-                                    );
-
-                                    await FirebaseUtils.addSurahToFirestore(
-                                        favorite);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(
-                                              '$surahName added to favorites')),
-                                    );
-                                  } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(
-                                              'Failed to add to favorites: $e')),
-                                    );
-                                  }
-                                },
-                                icon: Icon(
-                                  Icons.favorite,
-                                  color: Appcolors.secondaryColor,
+                                  color: Colors.white,
+                                  fontSize: 11.sp,
+                                  fontFamily: Fontstyle.fontname,
                                 ),
+                              ),
+                              trailing: FutureBuilder<bool>(
+                                future: checkIfFavorite(surahName, reciter),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return CircularProgressIndicator();
+                                  } else if (snapshot.hasError) {
+                                    return Icon(Icons.favorite,
+                                        color: Colors.white);
+                                  }
+
+                                  final isFav = snapshot.data ?? false;
+
+                                  return IconButton(
+                                    onPressed: () async {
+                                      bool new_state = await toggleFavorite(
+                                          url, surahName, reciter);
+                                      favoriteStatusMap[surahName] = new_state;
+                                    },
+                                    icon: Icon(
+                                      Icons.favorite,
+                                      color: isFav ? Colors.red : Colors.white,
+                                    ),
+                                  );
+                                },
                               ),
                               onTap: () {
                                 Navigator.pushNamed(

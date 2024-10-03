@@ -196,13 +196,15 @@ class _NowPlayingState extends State<NowPlaying> {
           ClipRRect(
             borderRadius: BorderRadius.circular(15.r),
             child: Image.asset(
+              // color: Colors.red,
               args?['artUri'] ?? 'assets/ن.png',
               width: 300.0,
               height: 300.0,
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
+              scale: 3,
             ),
           ),
-          SizedBox(height: 40.h),
+          // SizedBox(height: 40.h),
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: Row(
@@ -276,7 +278,7 @@ class _NowPlayingState extends State<NowPlaying> {
                 );
               },
             ),
-          SizedBox(height: 70.h),
+          SizedBox(height: 30.h),
           // Error message
           if (errorMessage != null)
             Padding(

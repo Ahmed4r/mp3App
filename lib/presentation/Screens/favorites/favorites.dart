@@ -5,11 +5,16 @@ import 'package:noon/data/model/favorites.dart';
 import 'package:noon/data/utils/firebaseUtils.dart';
 import 'package:noon/presentation/widgets/nowplaying.dart';
 
-class Favoritescreen extends StatelessWidget {
+class Favoritescreen extends StatefulWidget {
   static const String routeName = 'favoritesList';
 
   const Favoritescreen({super.key});
 
+  @override
+  State<Favoritescreen> createState() => _FavoritescreenState();
+}
+
+class _FavoritescreenState extends State<Favoritescreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,10 +56,9 @@ class Favoritescreen extends StatelessWidget {
           final favorites = snapshot.data!;
 
           return ListView.separated(
-            padding: EdgeInsets.only(top: 70.h),
+            padding: EdgeInsets.only(top: 20.h),
             separatorBuilder: (context, index) {
-              return const Divider(
-                  thickness: 1, color: Appcolors.secondaryColor);
+              return const Divider(thickness: 1, color: Appcolors.primaryColor);
             },
             itemCount: favorites.length,
             itemBuilder: (context, index) {
