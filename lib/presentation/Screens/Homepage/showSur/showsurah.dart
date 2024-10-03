@@ -92,10 +92,16 @@ class _ShowsurahState extends State<Showsurah> {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontFamily: Fontstyle.fontname,
-                                  fontSize: 18.sp,
+                                  fontSize: 22.sp,
                                 ),
                               ),
-                              subtitle: Text(surahId.toString()),
+                              subtitle: Text(
+                                surahId.toString(),
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 11.sp,
+                                    fontFamily: Fontstyle.fontname),
+                              ),
                               trailing: IconButton(
                                 onPressed: () async {
                                   try {

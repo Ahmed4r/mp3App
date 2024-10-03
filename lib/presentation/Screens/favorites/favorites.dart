@@ -13,6 +13,18 @@ class Favoritescreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Appcolors.ButtonColor,
+        centerTitle: true,
+        title: Text(
+          'Favorites ❤️',
+          style: TextStyle(
+            color: Appcolors.whiteColor,
+            fontSize: 30.sp,
+            fontFamily: Fontstyle.fontname,
+          ),
+        ),
+      ),
       backgroundColor: Appcolors.primaryColor,
       body: FutureBuilder<List<Favorites>>(
         future: FirebaseUtils.fetchFavorites(),
@@ -29,7 +41,7 @@ class Favoritescreen extends StatelessWidget {
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(
               child: Text(
-                'No favorites found.',
+                'No favorites added.',
                 style: TextStyle(color: Appcolors.whiteColor, fontSize: 18),
               ),
             );

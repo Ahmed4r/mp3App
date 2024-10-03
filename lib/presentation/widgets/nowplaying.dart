@@ -87,7 +87,8 @@ class _NowPlayingState extends State<NowPlaying> {
         });
       } catch (e) {
         setState(() {
-          errorMessage = 'Unable to play the audio. Please try again.';
+          errorMessage =
+              "We are experiencing data corruption with this reciter's audio files.";
         });
         print('Error playing audio: $e');
       }
@@ -205,6 +206,7 @@ class _NowPlayingState extends State<NowPlaying> {
           Padding(
             padding: const EdgeInsets.all(24.0),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -227,9 +229,9 @@ class _NowPlayingState extends State<NowPlaying> {
                     ),
                   ],
                 ),
-                SizedBox(
-                  width: 190.w,
-                ),
+                // SizedBox(
+                //   width: 100.w,
+                // ),
                 IconButton(
                   onPressed: () {
                     // Call the toggleFavorite function when pressed

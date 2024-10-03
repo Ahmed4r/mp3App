@@ -9,6 +9,7 @@ import 'package:noon/presentation/Screens/Homepage/cubit/homepageCubit.dart';
 import 'package:noon/presentation/Screens/Homepage/cubit/homepageStates.dart';
 import 'package:noon/presentation/Screens/Homepage/showSur/showsurah.dart';
 import 'package:noon/presentation/Screens/splashScreen/splashScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Homepage extends StatelessWidget {
   static const String routeName = 'homepage';
@@ -24,42 +25,37 @@ class Homepage extends StatelessWidget {
       child: BlocBuilder<Homepagecubit, Homepagestates>(
         builder: (context, state) {
           return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Appcolors.ButtonColor,
+              centerTitle: true,
+              title: Text(
+                'Reciters',
+                style: TextStyle(
+                  color: Appcolors.whiteColor,
+                  fontSize: 30.sp,
+                  fontFamily: Fontstyle.fontname,
+                ),
+              ),
+              leading: IconButton(
+                onPressed: () {
+                  Sharedprefutils.removeData(key: 'usertoken');
+                  // Reset state before navigating
+                  context.read<Homepagecubit>().resetState();
+                  Navigator.pushReplacementNamed(
+                      context, Splashscreen.routeName);
+                },
+                icon: Icon(
+                  Icons.logout,
+                  size: 25.sp,
+                  color: Appcolors.whiteColor,
+                ),
+              ),
+            ),
             backgroundColor: const Color(0xff1C1B1B),
             body: SingleChildScrollView(
               child: Column(
                 children: [
-                  SizedBox(height: 60.h),
-                  // Logout button
-                  Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Sharedprefutils.removeData(key: 'usertoken');
-                          // Reset state before navigating
-                          context.read<Homepagecubit>().resetState();
-                          Navigator.pushReplacementNamed(
-                              context, Splashscreen.routeName);
-                        },
-                        icon: Icon(
-                          Icons.logout,
-                          size: 25.sp,
-                          color: Appcolors.whiteColor,
-                        ),
-                      ),
-                    ],
-                  ),
                   SizedBox(height: 30.h),
-                  // Header Text
-                  Text(
-                    'Reciters',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: Fontstyle.fontname,
-                      fontSize: 30.sp,
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  // Conditional rendering for states
                   state is HomepageLoadingState
                       ? const Center(
                           child: Column(
@@ -68,7 +64,7 @@ class Homepage extends StatelessWidget {
                               CircularProgressIndicator(),
                               SizedBox(height: 20),
                               Text(
-                                'Fetching reciters...',
+                                'Fetching reciters... 🔎',
                                 style: TextStyle(color: Colors.white),
                               ),
                             ],
@@ -104,6 +100,7 @@ class Homepage extends StatelessWidget {
                                         padding: EdgeInsets.symmetric(
                                             vertical: 10.h),
                                         child: Card(
+                                          shadowColor: Appcolors.secondaryColor,
                                           color: const Color(0xff2C2C2C),
                                           child: ListTile(
                                             title: Text(
@@ -111,13 +108,13 @@ class Homepage extends StatelessWidget {
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontFamily: Fontstyle.fontname,
-                                                fontSize: 18.sp,
+                                                fontSize: 20.sp,
                                               ),
                                             ),
-                                            trailing: const Icon(
-                                              Icons.open_in_full,
-                                              color: Colors.green,
-                                            ),
+                                            // trailing: const Icon(
+                                            //   Icons.open_in_full,
+                                            //   color: Colors.green,
+                                            // ),
                                             onTap: () {
                                               // Check if moshaf exists
                                               if (reciter.moshaf != null &&
@@ -152,7 +149,7 @@ class Homepage extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        'Failed to load reciters',
+                                        'Failed to load reciters\ncheck wifi connection 🛜',
                                         style: TextStyle(
                                           color: Colors.red,
                                           fontFamily: Fontstyle.fontname,

@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:noon/data/model/favorites.dart';
-
+import 'package:noon/data/sharedpref/sharedprefUtils.dart';
 
 class FirebaseUtils {
   // Get the favorites collection with the proper converter
   static CollectionReference<Favorites> getFavoritesCollection() {
     return FirebaseFirestore.instance
-        .collection(Favorites.collectionName) // Ensure 'collectionName' is defined correctly
+        .collection(Favorites
+            .collectionName) // Ensure 'collectionName' is defined correctly
         .withConverter<Favorites>(
       fromFirestore: (snapshot, options) {
         return Favorites.fromFirestore(snapshot.data()!);
@@ -27,11 +28,14 @@ class FirebaseUtils {
 
       if (existingFavorite.docs.isEmpty) {
         // Add the favorite only if it doesn't exist
-        final docRef = getFavoritesCollection().doc(); // Generate a new document reference
+        final docRef =
+            getFavoritesCollection().doc(); // Generate a new document reference
         await docRef.set(favorite); // Save the favorite
-        print('Favorite added: ${favorite.surahName} by ${favorite.reciterName}');
+        print(
+            'Favorite added: ${favorite.surahName} by ${favorite.reciterName}');
       } else {
-        print('Favorite already exists: ${favorite.surahName} by ${favorite.reciterName}');
+        print(
+            'Favorite already exists: ${favorite.surahName} by ${favorite.reciterName}');
       }
     } catch (e) {
       print('Error adding favorite: $e'); // Logging the error
@@ -67,9 +71,11 @@ class FirebaseUtils {
         await getFavoritesCollection()
             .doc(existingFavorite.docs.first.id)
             .delete();
-        print('Favorite removed: ${favorite.surahName} by ${favorite.reciterName}');
+        print(
+            'Favorite removed: ${favorite.surahName} by ${favorite.reciterName}');
       } else {
-        print('Favorite not found: ${favorite.surahName} by ${favorite.reciterName}');
+        print(
+            'Favorite not found: ${favorite.surahName} by ${favorite.reciterName}');
       }
     } catch (e) {
       print('Error removing favorite: $e'); // Logging the error
