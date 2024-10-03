@@ -1,3 +1,4 @@
+import 'package:audio_service/audio_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:noon/presentation/Screens/AuthScreen/login.dart';
 import 'package:noon/presentation/Screens/AuthScreen/mainauth.dart';
 import 'package:noon/presentation/Screens/AuthScreen/register.dart';
 import 'package:noon/presentation/Screens/Discovry/DiscoveryScreen.dart';
+import 'package:noon/presentation/Screens/Homepage/aduioHandler.dart';
 import 'package:noon/presentation/Screens/Homepage/homepage.dart';
 import 'package:noon/presentation/Screens/Homepage/showSur/showsurah.dart';
 import 'package:noon/presentation/Screens/beside_Screens/choosemode.dart';
@@ -39,7 +41,7 @@ class Mp3App extends StatelessWidget {
             Mainauth.routeName: (context) => const Mainauth(),
             Login.routeName: (context) => const Login(),
             Register.routeName: (context) => const Register(),
-            Nowplaying.routeName: (context) => const Nowplaying(),
+            NowPlaying.routeName: (context) => NowPlaying(),
             DonwloadScreen.routeName: (context) => DonwloadScreen(),
             Favoritescreen.routeName: (context) => Favoritescreen(),
           },
@@ -49,7 +51,7 @@ class Mp3App extends StatelessWidget {
   }
 }
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -72,6 +74,14 @@ void main() async {
   } else {
     initialRoute = Homepage.routeName;
   }
+
+  AudioService.init(
+      builder: () => MyAudioHandler(),
+      config: AudioServiceConfig(
+        androidNotificationChannelId: 'com.example.audio_service.channel',
+        androidNotificationChannelName: 'Audio Service',
+        androidNotificationOngoing: true,
+      ));
 
   runApp(Mp3App(route: initialRoute));
 }

@@ -96,7 +96,7 @@ class Favoritescreen extends StatelessWidget {
                         if (favorite.url.isNotEmpty) {
                           Navigator.pushNamed(
                             context,
-                            Nowplaying.routeName,
+                            NowPlaying.routeName,
                             arguments: {
                               'url': favorite.url,
                               'surah': favorite.surahName,

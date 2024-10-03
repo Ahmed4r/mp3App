@@ -137,7 +137,7 @@ class _ShowsurahState extends State<Showsurah> {
                               onTap: () {
                                 Navigator.pushNamed(
                                   context,
-                                  Nowplaying.routeName,
+                                  NowPlaying.routeName,
                                   arguments: {
                                     'server': moshaf.server,
                                     'url': url,

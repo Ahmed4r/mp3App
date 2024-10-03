@@ -22,7 +22,7 @@ class CustomPlaysound extends StatelessWidget {
           InkWell(
               onTap: () async {
                 // Create a player
-                Navigator.pushNamed(context, Nowplaying.routeName, arguments: {
+                Navigator.pushNamed(context, NowPlaying.routeName, arguments: {
                   'audio': audio,
                   'surah': surah,
                 });
