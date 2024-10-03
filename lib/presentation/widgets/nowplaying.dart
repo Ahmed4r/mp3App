@@ -114,8 +114,13 @@ class _NowPlayingState extends State<NowPlaying> {
   }
 
   void seekTo(double value) {
-    final position = Duration(milliseconds: value.toInt());
-    player.seek(position);
+    try {
+      final position = Duration(milliseconds: value.toInt());
+      // Seek to the position in your media player
+      player.seek(position);
+    } catch (e) {
+      print("Error seeking to position: $e");
+    }
   }
 
   Future<void> toggleFavorite(
@@ -153,6 +158,11 @@ class _NowPlayingState extends State<NowPlaying> {
   void dispose() {
     player.dispose();
     super.dispose();
+  }
+
+  void replayAudio() {
+    seekTo(0.0); // Seek to the start of the audio
+    player.play(); // Start playing the audio again
   }
 
   @override
@@ -195,9 +205,10 @@ class _NowPlayingState extends State<NowPlaying> {
           SizedBox(height: 40.h),
           ClipRRect(
             borderRadius: BorderRadius.circular(15.r),
-            child: Image.asset(
+            child: Image.network(
               // color: Colors.red,
-              args?['artUri'] ?? 'assets/ن.png',
+              args?['artUri'] ??
+                  'https://i.pinimg.com/236x/81/0c/57/810c57e04d0143df559f3fbfcf382baa.jpg',
               width: 300.0,
               height: 300.0,
               fit: BoxFit.contain,
@@ -265,9 +276,19 @@ class _NowPlayingState extends State<NowPlaying> {
                       activeColor: Appcolors.secondaryColor,
                       value: position.inMilliseconds.toDouble(),
                       min: 0.0,
-                      max: duration.inMilliseconds.toDouble(),
+                      max: duration?.inMilliseconds.toDouble() ??
+                          0.0, // Ensure duration is not null
                       onChanged: (value) {
-                        seekTo(value);
+                        // Check if the value is close to the maximum value
+                        if (value >=
+                            (duration?.inMilliseconds.toDouble() ?? 0.0) - 1) {
+                          // If it's at the end, seek to the end and replay the audio
+                          seekTo(duration?.inMilliseconds.toDouble() ?? 0.0);
+                          replayAudio();
+                        } else {
+                          // Otherwise, just seek to the new position
+                          seekTo(value);
+                        }
                       },
                     ),
                     Text(
