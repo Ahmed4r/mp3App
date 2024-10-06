@@ -19,10 +19,10 @@ class _FavoritescreenState extends State<Favoritescreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Appcolors.ButtonColor,
+        backgroundColor: Appcolors.primaryColor,
         centerTitle: true,
         title: Text(
-          'Favorites ❤️',
+          'Favorites',
           style: TextStyle(
             color: Appcolors.whiteColor,
             fontSize: 30.sp,
@@ -85,23 +85,23 @@ class _FavoritescreenState extends State<Favoritescreen> {
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                    color:
-                        Appcolors.darkgreen, // Background color of the ListTile
+                    color: Appcolors
+                        .primaryColor, // Background color of the ListTile
                     border: Border.all(
                       color: Appcolors.secondaryColor, // Border color
-                      width: 2.0, // Border width
+                      width: 1, // Border width
                     ),
-                    borderRadius: BorderRadius.circular(30.0),
+                    borderRadius: BorderRadius.circular(12.0.r),
                   ), // Circular border
                   child: ListTile(
                     tileColor: Appcolors.favContiner,
                     title: Text(
                       favorite.surahName,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white, fontSize: 24),
                     ),
                     subtitle: Text(
                       favorite.reciterName,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white, fontSize: 18),
                     ),
                     trailing: IconButton(
                       icon: const Icon(

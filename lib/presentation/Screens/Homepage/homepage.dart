@@ -1,35 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'package:noon/appTheme.dart';
 import 'package:noon/data/sharedpref/sharedprefUtils.dart';
-import 'package:noon/data/userprovider.dart';
+import 'package:noon/presentation/Screens/Discovry/DiscoveryScreen.dart';
 import 'package:noon/presentation/Screens/Homepage/cubit/homepageCubit.dart';
 import 'package:noon/presentation/Screens/Homepage/cubit/homepageStates.dart';
 import 'package:noon/presentation/Screens/Homepage/showSur/showsurah.dart';
 import 'package:noon/presentation/Screens/splashScreen/splashScreen.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class Homepage extends StatelessWidget {
+class Homepage extends StatefulWidget {
   static const String routeName = 'homepage';
-  Homepage({super.key});
+  const Homepage({super.key});
 
-  final player =
-      AudioPlayer(); // Remember to dispose of this in a StatefulWidget
+  @override
+  State<Homepage> createState() => _HomepageState();
+}
+
+class _HomepageState extends State<Homepage> {
+  final player = AudioPlayer();
 
   @override
   Widget build(BuildContext context) {
-
     return BlocProvider(
       create: (context) => Homepagecubit()..getRecitersData(),
       child: BlocBuilder<Homepagecubit, Homepagestates>(
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
-              backgroundColor: Appcolors.ButtonColor,
+              elevation: 0,
+              backgroundColor: Appcolors.primaryColor,
               centerTitle: true,
               title: Text(
                 'Reciters',
@@ -53,24 +56,31 @@ class Homepage extends StatelessWidget {
                   color: Appcolors.whiteColor,
                 ),
               ),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, SearchScreen.routeName);
+                  },
+                  icon: Icon(
+                    Icons.search,
+                    size: 25.sp,
+                    color: Appcolors.whiteColor,
+                  ),
+                ),
+              ],
             ),
-            backgroundColor: const Color(0xff1C1B1B),
+            backgroundColor: Appcolors.primaryColor,
             body: SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(height: 30.h),
                   state is HomepageLoadingState
-                      ? const Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CircularProgressIndicator(),
-                              SizedBox(height: 20),
-                              Text(
-                                'Fetching reciters... 🔎',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ],
+                      ? Center(
+                          child: SpinKitRing(
+                            color: Colors.blueGrey,
+                            size: 50.0,
                           ),
                         )
                       : state is HomepageSuccessState &&
@@ -104,7 +114,7 @@ class Homepage extends StatelessWidget {
                                             vertical: 10.h),
                                         child: Card(
                                           shadowColor: Appcolors.secondaryColor,
-                                          color: const Color(0xff2C2C2C),
+                                          color: Appcolors.primaryColor,
                                           child: ListTile(
                                             title: Text(
                                               reciterName,
@@ -114,12 +124,7 @@ class Homepage extends StatelessWidget {
                                                 fontSize: 20.sp,
                                               ),
                                             ),
-                                            // trailing: const Icon(
-                                            //   Icons.open_in_full,
-                                            //   color: Colors.green,
-                                            // ),
                                             onTap: () {
-                                              // Check if moshaf exists
                                               if (reciter.moshaf != null &&
                                                   reciter.moshaf!.isNotEmpty) {
                                                 Navigator.pushNamed(context,

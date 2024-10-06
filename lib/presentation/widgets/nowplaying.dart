@@ -44,8 +44,8 @@ class _NowPlayingState extends State<NowPlaying> {
       String surahName = args?['surah'] ?? '';
       String reciterName = args?['reciter'] ?? '';
 
-      checkIfFavorite(surahName, reciterName); // Check if favorite here
-      _initializePlayer(); // Initialize the audio player
+      checkIfFavorite(surahName, reciterName);
+      _initializePlayer(); 
       isInitialized = true;
     }
   }
@@ -176,164 +176,166 @@ class _NowPlayingState extends State<NowPlaying> {
 
     return Scaffold(
       backgroundColor: Appcolors.primaryColor,
-      body: Column(
-        children: [
-          SizedBox(height: 40.h),
-          Row(
-            children: [
-              IconButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                icon: Icon(
-                  Icons.arrow_back_ios_new,
-                  size: 20.sp,
-                  color: Appcolors.whiteColor,
-                ),
-              ),
-              SizedBox(width: 100.w),
-              const Text(
-                'Now playing',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontFamily: 'Satoshi',
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 40.h),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(15.r),
-            child: Image.network(
-              // color: Colors.red,
-              args?['artUri'] ??
-                  'https://i.pinimg.com/236x/81/0c/57/810c57e04d0143df559f3fbfcf382baa.jpg',
-              width: 300.0,
-              height: 300.0,
-              fit: BoxFit.contain,
-              scale: 3,
-            ),
-          ),
-          // SizedBox(height: 40.h),
-          Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(height: 40.h),
+            Row(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      reciter,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontFamily: 'Satoshi',
-                      ),
-                    ),
-                    Text(
-                      surahName,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontFamily: 'Satoshi',
-                      ),
-                    ),
-                  ],
-                ),
-                // SizedBox(
-                //   width: 100.w,
-                // ),
                 IconButton(
                   onPressed: () {
-                    // Call the toggleFavorite function when pressed
-                    toggleFavorite(url, surahName, reciter);
+                    Navigator.pop(context);
                   },
                   icon: Icon(
-                    Icons.favorite,
-                    color: isfav ? Colors.red : Appcolors.whiteColor,
-                    size: 30.sp,
+                    Icons.arrow_back_ios_new,
+                    size: 20.sp,
+                    color: Appcolors.whiteColor,
+                  ),
+                ),
+                SizedBox(width: 100.w),
+                const Text(
+                  'Now playing',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontFamily: 'Satoshi',
                   ),
                 ),
               ],
             ),
-          ),
-          SizedBox(height: 20.h),
-          // Progress Bar
-          if (!isInitialized)
-            const CircularProgressIndicator()
-          else
-            StreamBuilder<Duration>(
-              stream: player.positionStream,
-              builder: (context, snapshot) {
-                final position = snapshot.data ?? Duration.zero;
-                final duration = player.duration ?? Duration.zero;
-
-                return Column(
-                  children: [
-                    Slider(
-                      activeColor: Appcolors.secondaryColor,
-                      value: position.inMilliseconds.toDouble(),
-                      min: 0.0,
-                      max: duration?.inMilliseconds.toDouble() ??
-                          0.0, // Ensure duration is not null
-                      onChanged: (value) {
-                        // Check if the value is close to the maximum value
-                        if (value >=
-                            (duration?.inMilliseconds.toDouble() ?? 0.0) - 1) {
-                          // If it's at the end, seek to the end and replay the audio
-                          seekTo(duration?.inMilliseconds.toDouble() ?? 0.0);
-                          replayAudio();
-                        } else {
-                          // Otherwise, just seek to the new position
-                          seekTo(value);
-                        }
-                      },
-                    ),
-                    Text(
-                      '${position.toString().split('.').first} / ${duration.toString().split('.').first}',
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ],
-                );
-              },
-            ),
-          SizedBox(height: 30.h),
-          // Error message
-          if (errorMessage != null)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Text(
-                errorMessage!,
-                style: const TextStyle(color: Colors.red, fontSize: 16),
-                textAlign: TextAlign.center,
+            SizedBox(height: 40.h),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15.r),
+              child: Image.network(
+               
+                args?['artUri'] ??
+                    'https://i.pinimg.com/236x/81/0c/57/810c57e04d0143df559f3fbfcf382baa.jpg',
+                width: 300.0.w,
+                height: 300.0.h,
+                fit: BoxFit.contain,
+                scale: 3,
               ),
             ),
-          // Playback controls
-          if (errorMessage == null) ...[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 70.h,
-                  width: 70.w,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50.r),
-                    color: Appcolors.ButtonColor,
+            // SizedBox(height: 40.h),
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        reciter,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontFamily: 'Satoshi',
+                        ),
+                      ),
+                      Text(
+                        surahName,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontFamily: 'Satoshi',
+                        ),
+                      ),
+                    ],
                   ),
-                  child: IconButton(
-                    onPressed: togglePlay,
+                  // SizedBox(
+                  //   width: 100.w,
+                  // ),
+                  IconButton(
+                    onPressed: () {
+                      // Call the toggleFavorite function when pressed
+                      toggleFavorite(url, surahName, reciter);
+                    },
                     icon: Icon(
-                      isPlaying ? Icons.pause : Icons.play_arrow,
-                      color: Colors.white,
+                      Icons.favorite,
+                      color: isfav ? Colors.red : Appcolors.whiteColor,
+                      size: 30.sp,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
+            SizedBox(height: 20.h),
+            // Progress Bar
+            if (!isInitialized)
+              const CircularProgressIndicator()
+            else
+              StreamBuilder<Duration>(
+                stream: player.positionStream,
+                builder: (context, snapshot) {
+                  final position = snapshot.data ?? Duration.zero;
+                  final duration = player.duration ?? Duration.zero;
+        
+                  return Column(
+                    children: [
+                      Slider(
+                        activeColor: Appcolors.secondaryColor,
+                        value: position.inMilliseconds.toDouble(),
+                        min: 0.0,
+                        max: duration.inMilliseconds.toDouble() ??
+                            0.0, // Ensure duration is not null
+                        onChanged: (value) {
+                          // Check if the value is close to the maximum value
+                          if (value >=
+                              (duration.inMilliseconds.toDouble() ?? 0.0) - 1) {
+                            // If it's at the end, seek to the end and replay the audio
+                            seekTo(duration.inMilliseconds.toDouble() ?? 0.0);
+                            replayAudio();
+                          } else {
+                            // Otherwise, just seek to the new position
+                            seekTo(value);
+                          }
+                        },
+                      ),
+                      Text(
+                        '${position.toString().split('.').first} / ${duration.toString().split('.').first}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            SizedBox(height: 30.h),
+            // Error message
+            if (errorMessage != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  errorMessage!,
+                  style: const TextStyle(color: Colors.red, fontSize: 16),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            // Playback controls
+            if (errorMessage == null) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 70.h,
+                    width: 70.w,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50.r),
+                      color: Appcolors.ButtonColor,
+                    ),
+                    child: IconButton(
+                      onPressed: togglePlay,
+                      icon: Icon(
+                        isPlaying ? Icons.pause : Icons.play_arrow,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

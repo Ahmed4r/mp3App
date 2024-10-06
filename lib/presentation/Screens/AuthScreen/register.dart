@@ -45,7 +45,7 @@ class _RegisterState extends State<Register> {
                 height: 10.h,
               ),
               Image.asset(
-                'assets/ن.png',
+                'assets/القران الكريم (1).png',
                 scale: 5,
               ),
               SizedBox(

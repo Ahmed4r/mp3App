@@ -10,9 +10,14 @@ class MyAudioHandler extends BaseAudioHandler
   final _player = AudioPlayer(); // e.g. just_audio
 
   // The most common callbacks:
+  @override
   Future<void> play() => _player.play();
+  @override
   Future<void> pause() => _player.pause();
+  @override
   Future<void> stop() => _player.stop();
+  @override
   Future<void> seek(Duration position) => _player.seek(position);
+  @override
   Future<void> skipToQueueItem(int i) => _player.seek(Duration.zero, index: i);
 }

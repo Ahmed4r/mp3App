@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:noon/presentation/Screens/Discovry/DiscoveryScreen.dart';
 import 'package:noon/presentation/Screens/Homepage/homepage.dart';
 import 'package:noon/presentation/Screens/favorites/favorites.dart';
-
+import 'package:noon/presentation/donwload.dart';
 
 class Bottomnavbar extends StatefulWidget {
   static const String routeName = 'nav';
@@ -14,10 +15,10 @@ class Bottomnavbar extends StatefulWidget {
 class _BottomnavbarState extends State<Bottomnavbar> {
   int currentIndex = 0;
   List<Widget> screens = [
-    Homepage(),
-    // DonwloadScreen(),
+     Homepage(),
+    SearchScreen(),
     Favoritescreen(),
-    // Profilescreen(),
+    DownloadScreen()
   ];
 
   void onTap(int index) {
@@ -44,20 +45,29 @@ class _BottomnavbarState extends State<Bottomnavbar> {
             icon: Image.asset('assets/Home.png'),
             label: 'Home',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Image.asset(
-          //     'assets/Discovery.png',
-          //   ),
-          //   label: 'Discovry',
-          // ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              'assets/Discovery.png',
+            ),
+            label: 'Discovry',
+          ),
           BottomNavigationBarItem(
             icon: Image.asset('assets/Heart.png'),
             label: 'Favorites',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Image.asset('assets/Profile.png'),
-          //   label: 'Profile',
-          // ),
+          BottomNavigationBarItem(
+            icon: Image.asset(
+              'assets/download.png',
+              color: Color(0xff636363),
+              scale: 17,
+            ),
+            // Icon(
+            //   Icons.download_outlined,
+            //   color: const Color(0xff636363),
+            //   size: 31.sp,
+            // ),
+            label: 'Download',
+          ),
         ],
       ),
     );

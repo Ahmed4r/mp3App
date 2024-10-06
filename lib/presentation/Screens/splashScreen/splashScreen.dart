@@ -26,7 +26,7 @@ class _SplashscreenState extends State<Splashscreen> {
   Widget build(BuildContext context) {
     return Image.asset(
       fit: BoxFit.contain,
-      'assets/noon.png',
+      'assets/splash.png',
       scale: 1,
     );
   }

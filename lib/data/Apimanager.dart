@@ -46,4 +46,21 @@ class Apimanager {
       rethrow; // Rethrow the error for further handling
     }
   }
+
+  static Future<reciterResponse> searchReciter(String search) async {
+    // int searchint = int.parse(search);
+    try {
+      Uri url = Uri.parse(
+          'https://www.mp3quran.net/api/v3/reciters?language=ar&reciter=$search');
+
+      var response = await http.get(url);
+      if (response.statusCode == 200 && response.statusCode < 300) {
+        return reciterResponse.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('Failed to load movie details: ${response.statusCode}');
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

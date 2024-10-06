@@ -1,16 +1,23 @@
-import 'package:firebase_core/firebase_core.dart';
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_file_downloader/flutter_file_downloader.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:http/http.dart' as http;
 import 'package:noon/appTheme.dart';
 import 'package:noon/data/model/favorites.dart';
 import 'package:noon/data/model/reciterResponse.dart';
-import 'package:noon/data/userprovider.dart';
 import 'package:noon/data/utils/firebaseUtils.dart';
+import 'package:noon/presentation/Screens/Homepage/cubit/homepageCubit.dart';
 import 'package:noon/presentation/Screens/Homepage/showSur/cubit/showsurCubit.dart';
 import 'package:noon/presentation/Screens/Homepage/showSur/cubit/showsurStates.dart';
-import 'package:noon/presentation/Screens/favorites/favorites.dart';
 import 'package:noon/presentation/widgets/nowplaying.dart';
+import 'package:path_provider/path_provider.dart'; // Import path_provider
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Showsurah extends StatefulWidget {
   static const String routeName = 'showsur';
@@ -39,37 +46,33 @@ class _ShowsurahState extends State<Showsurah> {
   @override
   void initState() {
     super.initState();
-    favoritesList = FirebaseUtils
-        .fetchFavorites(); // Pre-fetch favorites list // Pre-fetch favorites list
+    favoritesList = FirebaseUtils.fetchFavorites(); // Pre-fetch favorites list
   }
 
   Future<bool> toggleFavorite(
       String url, String surahName, String reciter) async {
-    bool isFav =
-        favoriteStatusMap[surahName] ?? false; // Get current favorite status
+    try {
+      bool isFav =
+          favoriteStatusMap[surahName] ?? false; // Get current favorite status
 
-    if (isFav) {
-      // Remove from favorites
-      await FirebaseUtils.removeFavorite(
-        Favorites(surahName: surahName, reciterName: reciter, url: url),
-      );
-      // ...
-      favoriteStatusMap[surahName] = false; // Update the favorite status
-    } else {
-      // Add to favorites
-      await FirebaseUtils.addSurahToFirestore(
-        Favorites(
-          surahName: surahName,
-          reciterName: reciter,
-          url: url,
-        ),
-      );
-      // ...
-      favoriteStatusMap[surahName] = true; // Update the favorite status
+      if (isFav) {
+        // Remove from favorites
+        await FirebaseUtils.removeFavorite(
+            Favorites(surahName: surahName, reciterName: reciter, url: url));
+        favoriteStatusMap[surahName] = false; // Update the favorite status
+      } else {
+        // Add to favorites
+        await FirebaseUtils.addSurahToFirestore(
+            Favorites(surahName: surahName, reciterName: reciter, url: url));
+        favoriteStatusMap[surahName] = true; // Update the favorite status
+      }
+
+      setState(() {}); // Trigger a rebuild to update the UI
+      return !isFav; // Return the new favorite status
+    } catch (e) {
+      print('Error toggling favorite: $e');
+      return false; // Default to false if there's an error
     }
-
-    setState(() {}); // Trigger a rebuild to update the UI
-    return !isFav; // Return the new favorite status
   }
 
   @override
@@ -87,10 +90,14 @@ class _ShowsurahState extends State<Showsurah> {
           return Scaffold(
             backgroundColor: const Color(0xff1C1B1B),
             body: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(height: 30.h),
                 if (state is ShowsurLoadingstates) ...[
-                  const Center(child: CircularProgressIndicator()),
+                  const Center(
+                      child: CircularProgressIndicator(
+                          color: Appcolors.whiteColor)),
                 ] else if (state is ShowsurSucessstates) ...[
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 20.h),
@@ -107,11 +114,8 @@ class _ShowsurahState extends State<Showsurah> {
                         ),
                         IconButton(
                           onPressed: () => Navigator.pop(context),
-                          icon: Icon(
-                            Icons.home,
-                            color: Appcolors.secondaryColor,
-                            size: 30.sp,
-                          ),
+                          icon: Icon(Icons.home,
+                              color: Appcolors.secondaryColor, size: 30.sp),
                         ),
                       ],
                     ),
@@ -137,44 +141,82 @@ class _ShowsurahState extends State<Showsurah> {
                               title: Text(
                                 surahName,
                                 style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: Fontstyle.fontname,
-                                  fontSize: 22.sp,
-                                ),
+                                    color: Colors.white,
+                                    fontFamily: Fontstyle.fontname,
+                                    fontSize: 22.sp),
                               ),
                               subtitle: Text(
                                 surahId.toString(),
                                 style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 11.sp,
-                                  fontFamily: Fontstyle.fontname,
-                                ),
+                                    color: Colors.white,
+                                    fontSize: 11.sp,
+                                    fontFamily: Fontstyle.fontname),
                               ),
-                              trailing: FutureBuilder<bool>(
-                                future: checkIfFavorite(surahName, reciter),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return CircularProgressIndicator();
-                                  } else if (snapshot.hasError) {
-                                    return Icon(Icons.favorite,
-                                        color: Colors.white);
+                              leading: IconButton(
+                                onPressed: () async {
+                                  print(
+                                      'urllllllllllllllllllllllllllllllllllll${url}');
+                                  try {
+                                    FileDownloader.downloadFile(
+                                      url: url,
+                                      name: "$surahName by $reciter",
+                                      subPath: "/storage/emulated/0/Download",
+                                      onProgress:
+                                          (String? fileName, double? progress) {
+                                        print(
+                                            'FILE $fileName HAS PROGRESS $progress');
+                                      },
+                                      onDownloadCompleted: (String path) {
+                                        print('FILE DOWNLOADED TO PATH: $path');
+                                      },
+                                      onDownloadError: (String error) {
+                                        print('DOWNLOAD ERROR: $error');
+                                      },
+                                    );
+                                  } catch (e) {
+                                    print("Download failed: $e");
                                   }
-
-                                  final isFav = snapshot.data ?? false;
-
-                                  return IconButton(
-                                    onPressed: () async {
-                                      bool new_state = await toggleFavorite(
-                                          url, surahName, reciter);
-                                      favoriteStatusMap[surahName] = new_state;
-                                    },
-                                    icon: Icon(
-                                      Icons.favorite,
-                                      color: isFav ? Colors.red : Colors.white,
-                                    ),
-                                  );
                                 },
+                                icon: Icon(Icons.download, color: Colors.white),
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  FutureBuilder<bool>(
+                                    future: checkIfFavorite(surahName, reciter),
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return CircularProgressIndicator();
+                                      } else if (snapshot.hasError) {
+                                        return Icon(Icons.favorite,
+                                            color: Colors.white);
+                                      }
+
+                                      final isFav = snapshot.data ?? false;
+
+                                      return IconButton(
+                                        onPressed: () async {
+                                          bool newState = await toggleFavorite(
+                                              url, surahName, reciter);
+                                          favoriteStatusMap[surahName] =
+                                              newState;
+                                        },
+                                        icon: Icon(
+                                          Icons.favorite,
+                                          color:
+                                              isFav ? Colors.red : Colors.white,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.delete, color: Colors.red),
+                                    onPressed: () async {
+                                      // Call delete function
+                                    },
+                                  ),
+                                ],
                               ),
                               onTap: () {
                                 Navigator.pushNamed(
@@ -200,10 +242,9 @@ class _ShowsurahState extends State<Showsurah> {
                     child: Text(
                       'Failed to load reciters: ${state.ErrorMessage}',
                       style: TextStyle(
-                        color: Colors.red,
-                        fontFamily: Fontstyle.fontname,
-                        fontSize: 16.sp,
-                      ),
+                          color: Colors.red,
+                          fontFamily: Fontstyle.fontname,
+                          fontSize: 16.sp),
                     ),
                   ),
                 ],
@@ -213,5 +254,12 @@ class _ShowsurahState extends State<Showsurah> {
         },
       ),
     );
+  }
+
+  Future<void> saveSurahToPrefs(
+      String surahId, Map<String, dynamic> surahData) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+        'surah_$surahId', jsonEncode(surahData)); // Save as a JSON string
   }
 }
