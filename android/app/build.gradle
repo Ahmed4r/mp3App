@@ -1,15 +1,12 @@
 plugins {
     id "com.android.application"
-    // START: FlutterFire Configuration
-    id 'com.google.gms.google-services'
-    // END: FlutterFire Configuration
-    id "kotlin-android"
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
-    id "dev.flutter.flutter-gradle-plugin"
+    id 'com.google.gms.google-services' // Firebase services
+    id "kotlin-android" // Kotlin support
+    id "dev.flutter.flutter-gradle-plugin" // Flutter plugin
 }
 
 android {
-    namespace = "com.example.mp3_app"
+    namespace = "com.example.mp3_app" // Update if necessary
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -23,21 +20,16 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.noon"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 33
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        applicationId = "com.example.mp3_app" // Make sure this matches your google-services.json
+        minSdk = 33 // Set to the minimum SDK version you want to support
+        targetSdk = flutter.targetSdkVersion // Update to the latest stable version if needed
+        versionCode = 1 // Increment for new releases
+        versionName = "1.0" // Update as per your versioning strategy
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+     
         }
     }
 }
@@ -45,3 +37,16 @@ android {
 flutter {
     source = "../.."
 }
+
+// Ensure you have a release signing configuration defined in your project
+android {
+    signingConfigs {
+        release {
+            storeFile file("path-to-your-release-keystore.jks") // Path to your keystore
+            storePassword "your-keystore-password" // Keystore password
+            keyAlias "your-key-alias" // Key alias
+            keyPassword "your-key-password" // Key password
+        }
+    }
+}
+
