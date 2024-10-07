@@ -6,6 +6,7 @@ import 'package:just_audio/just_audio.dart';
 
 import 'package:noon/appTheme.dart';
 import 'package:noon/data/sharedpref/sharedprefUtils.dart';
+import 'package:noon/presentation/Screens/AuthScreen/login.dart';
 import 'package:noon/presentation/Screens/Discovry/DiscoveryScreen.dart';
 import 'package:noon/presentation/Screens/Homepage/cubit/homepageCubit.dart';
 import 'package:noon/presentation/Screens/Homepage/cubit/homepageStates.dart';
@@ -47,8 +48,7 @@ class _HomepageState extends State<Homepage> {
                   Sharedprefutils.removeData(key: 'usertoken');
                   // Reset state before navigating
                   context.read<Homepagecubit>().resetState();
-                  Navigator.pushReplacementNamed(
-                      context, Splashscreen.routeName);
+                  Navigator.pushReplacementNamed(context, Login.routeName);
                 },
                 icon: Icon(
                   Icons.logout,

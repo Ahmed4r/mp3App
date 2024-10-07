@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noon/data/Apimanager.dart';
 import 'package:noon/data/model/reciterResponse.dart';
@@ -33,6 +36,12 @@ class SearchCubit extends Cubit<Searchstates> {
         emit(SearchErrorState(
             errorMessage: 'Reciter not found with that name.'));
       }
+    } on SocketException catch (e) {
+      emit(SearchErrorState(
+          errorMessage: 'SocketException. Seems to be no internet available'));
+      // debugPrint('SocketException. Seems to be no internet available');
+      // debugPrint(e.toString());
+      // debugPrint('OS Errorcode: ${e.osError?.errorCode.toString()}');
     } catch (e) {
       emit(SearchErrorState(errorMessage: e.toString()));
     }

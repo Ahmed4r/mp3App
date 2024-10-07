@@ -11,16 +11,17 @@ class Homepagecubit extends Cubit<Homepagestates> {
   List<Reciters> reciters = [];
 
   void getRecitersData() async {
-    if (isLoading) return; // Prevent multiple simultaneous calls
+    if (isLoading || isClosed)
+      return; // Prevent multiple calls and emit after close
     try {
       isLoading = true;
       emit(HomepageLoadingState());
 
       var response = await Apimanager.getReciterData();
       reciters = response.reciters ?? [];
-      emit(HomepageSuccessState(response: response));
+      if (!isClosed) emit(HomepageSuccessState(response: response));
     } catch (e) {
-      emit(HomepageErrorState(ErrorMessage: e.toString()));
+      if (!isClosed) emit(HomepageErrorState(ErrorMessage: e.toString()));
     } finally {
       isLoading = false;
     }
@@ -29,5 +30,11 @@ class Homepagecubit extends Cubit<Homepagestates> {
   // Add a method to reset the state (used during logout)
   void resetState() {
     emit(HomepageInitState());
+  }
+
+  @override
+  Future<void> close() {
+    // Clean up resources, if any
+    return super.close();
   }
 }

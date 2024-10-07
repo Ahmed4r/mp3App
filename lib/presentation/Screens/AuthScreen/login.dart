@@ -190,7 +190,7 @@ class _LoginState extends State<Login> {
                         fontFamily: 'Satoshi'),
                   ),
                   SizedBox(
-                    width: 49.w,
+                    width: 40.w,
                   ),
                   Image.asset('assets/divider.png')
                 ],

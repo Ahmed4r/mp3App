@@ -1,22 +1,21 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
 
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
+
 import 'package:flutter_file_downloader/flutter_file_downloader.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:http/http.dart' as http;
+
 import 'package:noon/appTheme.dart';
 import 'package:noon/data/model/favorites.dart';
 import 'package:noon/data/model/reciterResponse.dart';
 import 'package:noon/data/utils/firebaseUtils.dart';
-import 'package:noon/presentation/Screens/Homepage/cubit/homepageCubit.dart';
+
 import 'package:noon/presentation/Screens/Homepage/showSur/cubit/showsurCubit.dart';
 import 'package:noon/presentation/Screens/Homepage/showSur/cubit/showsurStates.dart';
 import 'package:noon/presentation/widgets/nowplaying.dart';
-import 'package:path_provider/path_provider.dart'; // Import path_provider
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Showsurah extends StatefulWidget {
@@ -155,9 +154,12 @@ class _ShowsurahState extends State<Showsurah> {
                               leading: IconButton(
                                 onPressed: () async {
                                   print(
-                                      'urllllllllllllllllllllllllllllllllllll${url}');
+                                      'urllllllllllllllllllllllllllllllllllll$url');
                                   try {
                                     FileDownloader.downloadFile(
+                                      notificationType: NotificationType.all,
+                                      downloadService:
+                                          DownloadService.downloadManager,
                                       url: url,
                                       name: "$surahName by $reciter",
                                       subPath: "/storage/emulated/0/Download",
@@ -165,9 +167,28 @@ class _ShowsurahState extends State<Showsurah> {
                                           (String? fileName, double? progress) {
                                         print(
                                             'FILE $fileName HAS PROGRESS $progress');
+                                        //////////////////
+                                        ///
                                       },
                                       onDownloadCompleted: (String path) {
                                         print('FILE DOWNLOADED TO PATH: $path');
+
+                                        final snackBar = SnackBar(
+                                          elevation: 0,
+                                          behavior: SnackBarBehavior.fixed,
+                                          backgroundColor: Colors.transparent,
+                                          content: AwesomeSnackbarContent(
+                                            title: 'Done',
+                                            message:
+                                                'File has been Downloaded Successfully',
+
+                                            /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+                                            contentType: ContentType.success,
+                                          ),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                          ..hideCurrentSnackBar()
+                                          ..showSnackBar(snackBar);
                                       },
                                       onDownloadError: (String error) {
                                         print('DOWNLOAD ERROR: $error');
@@ -208,12 +229,6 @@ class _ShowsurahState extends State<Showsurah> {
                                               isFav ? Colors.red : Colors.white,
                                         ),
                                       );
-                                    },
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.delete, color: Colors.red),
-                                    onPressed: () async {
-                                      // Call delete function
                                     },
                                   ),
                                 ],

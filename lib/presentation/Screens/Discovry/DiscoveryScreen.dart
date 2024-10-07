@@ -6,6 +6,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:noon/appTheme.dart';
 import 'package:noon/presentation/Screens/Discovry/searchStates.dart';
 import 'package:noon/presentation/Screens/Discovry/searchcubit.dart';
+import 'package:noon/presentation/Screens/Homepage/homepage.dart';
 import 'package:noon/presentation/Screens/Homepage/showSur/showsurah.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -44,6 +45,16 @@ class _SearchScreenState extends State<SearchScreen> {
                       }
                     },
                     decoration: InputDecoration(
+                      icon: IconButton(
+                        onPressed: () {
+                          Navigator.popAndPushNamed(
+                              context, Homepage.routeName);
+                        },
+                        icon: Icon(
+                          Icons.arrow_back_ios_new,
+                          color: Appcolors.secondaryColor,
+                        ),
+                      ),
                       suffixIcon:
                           Icon(Icons.search, color: Appcolors.whiteColor),
                       // icon: Icon(Icons.search, color: Colors.blueGrey),

@@ -58,7 +58,7 @@ Future<void> main() async {
   await Sharedprefutils.init();
 
   String? token = Sharedprefutils.getData(key: 'usertoken') as String?;
-  print('Tokennnnnnnnnnnnnnnnnnnnnnn: $token');
+  print('Token: $token');
 
   String initialRoute;
   if (token == null) {

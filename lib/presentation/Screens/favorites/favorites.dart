@@ -4,6 +4,7 @@ import 'package:noon/appTheme.dart';
 import 'package:noon/data/model/favorites.dart';
 import 'package:noon/data/utils/firebaseUtils.dart';
 import 'package:noon/presentation/widgets/nowplaying.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class Favoritescreen extends StatefulWidget {
   static const String routeName = 'favoritesList';
@@ -15,6 +16,19 @@ class Favoritescreen extends StatefulWidget {
 }
 
 class _FavoritescreenState extends State<Favoritescreen> {
+  late Future<List<Favorites>> _favoritesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _favoritesFuture = FirebaseUtils.fetchFavorites(); // Initialize the Future
+  }
+
+  Future<bool> _checkWiFiConnection() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    return connectivityResult == ConnectivityResult.wifi;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +46,7 @@ class _FavoritescreenState extends State<Favoritescreen> {
       ),
       backgroundColor: Appcolors.primaryColor,
       body: FutureBuilder<List<Favorites>>(
-        future: FirebaseUtils.fetchFavorites(),
+        future: _favoritesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -52,7 +66,6 @@ class _FavoritescreenState extends State<Favoritescreen> {
             );
           }
 
-          // List of favorites available
           final favorites = snapshot.data!;
 
           return ListView.separated(
@@ -76,7 +89,14 @@ class _FavoritescreenState extends State<Favoritescreen> {
                   child: const Icon(Icons.delete, color: Colors.white),
                 ),
                 onDismissed: (direction) {
-                  FirebaseUtils.removeFavorite(favorite);
+                  FirebaseUtils.removeFavorite(favorite).then((_) {
+                    // Update the state to reflect the removed item
+                    setState(() {
+                      _favoritesFuture =
+                          FirebaseUtils.fetchFavorites(); // Refresh the list
+                    });
+                  });
+
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                         content: Text(
@@ -85,31 +105,33 @@ class _FavoritescreenState extends State<Favoritescreen> {
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Appcolors
-                        .primaryColor, // Background color of the ListTile
+                    color: Appcolors.primaryColor,
                     border: Border.all(
-                      color: Appcolors.secondaryColor, // Border color
-                      width: 1, // Border width
+                      color: Appcolors.secondaryColor,
+                      width: 1,
                     ),
                     borderRadius: BorderRadius.circular(12.0.r),
-                  ), // Circular border
+                  ),
                   child: ListTile(
+                    // minLeadingWidth: 10,
+
                     tileColor: Appcolors.favContiner,
                     title: Text(
                       favorite.surahName,
-                      style: const TextStyle(color: Colors.white, fontSize: 24),
+                      style: const TextStyle(color: Colors.white, fontSize: 20),
                     ),
                     subtitle: Text(
                       favorite.reciterName,
-                      style: const TextStyle(color: Colors.white, fontSize: 18),
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
                     ),
                     trailing: IconButton(
                       icon: const Icon(
                         Icons.play_arrow,
                         color: Appcolors.secondaryColor,
                       ),
-                      onPressed: () {
-                        if (favorite.url.isNotEmpty) {
+                      onPressed: () async {
+                        bool isWiFiConnected = await _checkWiFiConnection();
+                        if (isWiFiConnected && favorite.url.isNotEmpty) {
                           Navigator.pushNamed(
                             context,
                             NowPlaying.routeName,
@@ -120,11 +142,13 @@ class _FavoritescreenState extends State<Favoritescreen> {
                             },
                           );
                         } else {
-                          // Show a message if URL is not valid
+                          // Show a message if URL is not valid or not connected to Wi-Fi
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                                content: Text(
-                                    'Cannot play ${favorite.surahName}, URL not available')),
+                              content: Text(isWiFiConnected
+                                  ? 'Cannot play ${favorite.surahName}, URL not available'
+                                  : 'Please connect to Wi-Fi to play audio'),
+                            ),
                           );
                         }
                       },

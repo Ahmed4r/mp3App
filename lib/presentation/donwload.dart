@@ -1,10 +1,17 @@
 import 'dart:io';
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:noon/appTheme.dart';
+import 'package:noon/main.dart';
+import 'package:noon/presentation/widgets/nowplaying.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 
 class DownloadScreen extends StatefulWidget {
   static const String routeName = 'download';
+
+  const DownloadScreen({super.key});
 
   @override
   _DownloadScreenState createState() => _DownloadScreenState();
@@ -43,14 +50,7 @@ class _DownloadScreenState extends State<DownloadScreen> {
     }
   }
 
-/*************  ✨ Codeium Command ⭐  *************/
-  /// Opens the specified file using the default associated app.
-  ///
-  /// For example, if the file is an MP3, it will open in the default music player.
-  /// If the file is an image, it will open in the default image viewer.
-  ///
-/******  65479768-9dc7-4052-ae77-5d3af3589d79  *******/ Future<void> _openFile(
-      String filePath) async {
+  Future<void> _openFile(String filePath) async {
     final result = await OpenFile.open(filePath);
     if (result.type == ResultType.done) {
       print('File opened successfully: ${result.message}');
@@ -59,11 +59,43 @@ class _DownloadScreenState extends State<DownloadScreen> {
     }
   }
 
+  Future<void> _deleteFile(String filePath) async {
+    try {
+      final file = File(filePath);
+      if (await file.exists()) {
+        await file.delete();
+        // Refresh the file list after deletion
+        _listFiles();
+        // AnimatedSnackBar.rectangle(
+        //   'Success',
+        //   'This is a success snack bar',
+        //   type: AnimatedSnackBarType.success,
+        //   brightness: Brightness.light,
+        // ).show(
+        //   context,
+        // );
+      }
+    } catch (e) {
+      print('Error deleting file: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error deleting file: $e'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Appcolors.primaryColor,
       appBar: AppBar(
-        title: Text("Downloaded Files"),
+        backgroundColor: Appcolors.primaryColor,
+        title: Text(
+          "Downloaded Files",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: files.isNotEmpty
           ? ListView.builder(
@@ -74,20 +106,52 @@ class _DownloadScreenState extends State<DownloadScreen> {
                 String fileName = filePath.split('/').last;
 
                 return ListTile(
-                  title: Text(fileName),
-                  subtitle: Text(filePath),
-                  trailing: Icon(Icons.play_circle_filled),
-                  onTap: () {
-                    if (fileName.endsWith('.mp3')) {
-                      _openFile(filePath); // Open MP3 file
-                    } else {
-                      print('This is not an MP3 file');
-                    }
-                  },
+                  title: Text(
+                    fileName,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  subtitle: Text(
+                    filePath,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.play_circle_filled,
+                          color: Colors.white,
+                          size: 30.sp,
+                        ),
+                        onPressed: () {
+                          // Navigator.pushNamed(context, NowPlaying.routeName);
+                          if (fileName.endsWith('.mp3')) {
+                            _openFile(filePath); // Open MP3 file
+                          } else {
+                            print('This is not an MP3 file');
+                          }
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                          size: 30.sp,
+                        ),
+                        onPressed: () {
+                          _deleteFile(filePath); // Delete the file
+                        },
+                      ),
+                    ],
+                  ),
                 );
               },
             )
-          : Center(child: Text("No files found")),
+          : Center(
+              child: Text(
+              "No Downloads yet",
+              style: TextStyle(color: Colors.white, fontSize: 25.sp),
+            )),
     );
   }
 }

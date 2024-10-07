@@ -215,21 +215,7 @@ class _RegisterState extends State<Register> {
               SizedBox(
                 height: 30.h,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  InkWell(
-                      onTap: () {
-                        Navigator.pushReplacementNamed(
-                            context, Homepage.routeName);
-                      },
-                      child: Image.asset('assets/google.png')),
-                  SizedBox(
-                    width: 60.w,
-                  ),
-                  InkWell(onTap: () {}, child: Image.asset('assets/apple.png')),
-                ],
-              ),
+             
               SizedBox(
                 height: 10.h,
               ),

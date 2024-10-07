@@ -54,7 +54,7 @@ class FirebaseUtils {
       return snapshot.docs.map((doc) => doc.data()).toList();
     } catch (e) {
       print('Error fetching favorites: $e'); // Improved logging
-      throw Exception('Failed to load favorites: $e');
+      throw Exception('Failed to load favorites: ${e.toString()}');
     }
   }
 
