@@ -129,28 +129,13 @@ class _FavoritescreenState extends State<Favoritescreen> {
                         Icons.play_arrow,
                         color: Appcolors.secondaryColor,
                       ),
-                      onPressed: () async {
-                        bool isWiFiConnected = await _checkWiFiConnection();
-                        if (isWiFiConnected && favorite.url.isNotEmpty) {
-                          Navigator.pushNamed(
-                            context,
-                            NowPlaying.routeName,
+                      onPressed: () {
+                        Navigator.pushNamed(context, NowPlaying.routeName,
                             arguments: {
                               'url': favorite.url,
                               'surah': favorite.surahName,
                               'reciter': favorite.reciterName,
-                            },
-                          );
-                        } else {
-                          // Show a message if URL is not valid or not connected to Wi-Fi
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(isWiFiConnected
-                                  ? 'Cannot play ${favorite.surahName}, URL not available'
-                                  : 'Please connect to Wi-Fi to play audio'),
-                            ),
-                          );
-                        }
+                            });
                       },
                     ),
                   ),
