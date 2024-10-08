@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:noon/appColors.dart';
 
-import 'package:noon/appTheme.dart';
+// import 'package:noon/appTheme.dart';
 import 'package:noon/data/sharedpref/sharedprefUtils.dart';
 import 'package:noon/presentation/Screens/AuthScreen/login.dart';
 import 'package:noon/presentation/Screens/Discovry/DiscoveryScreen.dart';

@@ -3,7 +3,8 @@ import 'package:audio_session/audio_session.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:noon/appTheme.dart';
+import 'package:noon/appColors.dart';
+
 import 'package:noon/data/model/favorites.dart';
 import 'package:noon/data/utils/firebaseUtils.dart';
 

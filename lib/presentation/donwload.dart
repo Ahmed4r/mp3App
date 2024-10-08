@@ -1,10 +1,9 @@
 import 'dart:io';
-import 'package:animated_snack_bar/animated_snack_bar.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:noon/appTheme.dart';
-import 'package:noon/main.dart';
-import 'package:noon/presentation/widgets/nowplaying.dart';
+import 'package:noon/appColors.dart';
+
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 

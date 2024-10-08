@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:noon/appTheme.dart';
+import 'package:noon/appColors.dart';
+
 
 class Dialogutils {
   static void showLoading({

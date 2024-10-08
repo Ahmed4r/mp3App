@@ -6,8 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_file_downloader/flutter_file_downloader.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:noon/appColors.dart';
 
-import 'package:noon/appTheme.dart';
+// import 'package:noon/appTheme.dart';
 import 'package:noon/data/model/favorites.dart';
 import 'package:noon/data/model/reciterResponse.dart';
 import 'package:noon/data/utils/firebaseUtils.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:noon/appTheme.dart';
+import 'package:noon/appColors.dart';
+// import 'package:noon/appTheme.dart';
 import 'package:noon/data/model/favorites.dart';
 import 'package:noon/data/utils/firebaseUtils.dart';
 import 'package:noon/presentation/widgets/nowplaying.dart';
