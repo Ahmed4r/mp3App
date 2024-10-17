@@ -8,7 +8,7 @@ import 'package:noon/presentation/Screens/AuthScreen/dialogUtils.dart';
 import 'package:noon/presentation/Screens/AuthScreen/register.dart';
 import 'package:noon/presentation/Screens/Homepage/homepage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 class Login extends StatefulWidget {
   static const String routeName = 'login';
@@ -284,7 +284,7 @@ class _LoginState extends State<Login> {
 
   Future<void> saveUserDetails(String? email, String? uid, String token) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+    
       await Sharedprefutils.saveData(
           key: 'usertoken', value: token); // Use consistent key 'usertoken'
       await Sharedprefutils.saveData(key: 'userEmail', value: email);

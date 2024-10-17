@@ -235,7 +235,7 @@ class _NowPlayingState extends State<NowPlaying> {
                       fontSize: 20,
                       color: Colors.white,
                       fontFamily: Fontstyle.fontname)),
-              Text("سورة ${surahName}",
+              Text("سورة $surahName",
                   style: const TextStyle(
                       fontSize: 20,
                       color: Colors.white,

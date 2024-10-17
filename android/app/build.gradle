@@ -4,6 +4,11 @@ plugins {
     id "kotlin-android" // Kotlin support
     id "dev.flutter.flutter-gradle-plugin" // Flutter plugin
 }
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
 
 android {
     namespace = "com.example.mp3_app" // Update if necessary
@@ -21,14 +26,24 @@ android {
 
     defaultConfig {
         applicationId = "com.example.mp3_app" // Make sure this matches your google-services.json
-        minSdk = 23 // Set to the minimum SDK version you want to support
+        minSdk = 24 // Set to the minimum SDK version you want to support
         targetSdk = flutter.targetSdkVersion // Update to the latest stable version if needed
         versionCode = 2 // Increment for new releases
         versionName = "2.0" // Update as per your versioning strategy
     }
+    signingConfigs {
+        release {
+            keyAlias = keystoreProperties['keyAlias']
+            keyPassword = keystoreProperties['keyPassword']
+            storeFile = keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword = keystoreProperties['storePassword']
+        }
+    }
 
     buildTypes {
         release {
+             signingConfig = signingConfigs.release
+           
      
         }
     }
@@ -42,10 +57,10 @@ flutter {
 android {
     signingConfigs {
         release {
-            storeFile file("path-to-your-release-keystore.jks") // Path to your keystore
-            storePassword "your-keystore-password" // Keystore password
-            keyAlias "your-key-alias" // Key alias
-            keyPassword "your-key-password" // Key password
+            // storeFile file("path-to-your-release-keystore.jks") // Path to your keystore
+            // storePassword "your-keystore-password" // Keystore password
+            // keyAlias "your-key-alias" // Key alias
+            // keyPassword "your-key-password" // Key password
         }
     }
 }

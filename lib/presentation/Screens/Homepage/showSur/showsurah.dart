@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +17,6 @@ import 'package:noon/presentation/Screens/Homepage/showSur/cubit/showsurStates.d
 import 'package:noon/presentation/widgets/nowplaying.dart';
 
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Showsurah extends StatefulWidget {
   static const String routeName = 'showsur';
