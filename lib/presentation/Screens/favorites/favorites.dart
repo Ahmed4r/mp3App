@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:noon/appColors.dart';
-// import 'package:noon/appTheme.dart';
 import 'package:noon/data/model/favorites.dart';
 import 'package:noon/data/utils/firebaseUtils.dart';
 import 'package:noon/presentation/widgets/nowplaying.dart';
@@ -17,17 +17,27 @@ class Favoritescreen extends StatefulWidget {
 }
 
 class _FavoritescreenState extends State<Favoritescreen> {
+  bool _isConnected = false;
   late Future<List<Favorites>> _favoritesFuture;
+  List<Favorites> _favoritesList = []; // Local state to store favorites
 
   @override
   void initState() {
     super.initState();
-    _favoritesFuture = FirebaseUtils.fetchFavorites(); // Initialize the Future
+    _checkConnection();
+    _favoritesFuture = _loadFavorites(); // Initialize the Future
   }
 
-  Future<bool> _checkWiFiConnection() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    return connectivityResult == ConnectivityResult.wifi;
+  Future<List<Favorites>> _loadFavorites() async {
+    _favoritesList = await FirebaseUtils.fetchFavorites();
+    return _favoritesList; // Return the loaded favorites
+  }
+
+  Future<void> _checkConnection() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    setState(() {
+      _isConnected = connectivityResult != ConnectivityResult.none;
+    });
   }
 
   @override
@@ -61,13 +71,16 @@ class _FavoritescreenState extends State<Favoritescreen> {
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(
               child: Text(
-                'No favorites added.',
-                style: TextStyle(color: Appcolors.whiteColor, fontSize: 18),
+                'Add Your Favorites Here',
+                style: TextStyle(
+                    color: Appcolors.whiteColor,
+                    fontSize: 25,
+                    fontFamily: 'Satoshi'),
               ),
             );
           }
 
-          final favorites = snapshot.data!;
+          final favorites = snapshot.data!; // Use the data from the snapshot
 
           return ListView.separated(
             padding: EdgeInsets.only(top: 20.h),
@@ -77,7 +90,6 @@ class _FavoritescreenState extends State<Favoritescreen> {
             itemCount: favorites.length,
             itemBuilder: (context, index) {
               final favorite = favorites[index];
-
               return Dismissible(
                 key: Key(favorite.surahName),
                 background: Container(
@@ -89,20 +101,33 @@ class _FavoritescreenState extends State<Favoritescreen> {
                   alignment: Alignment.centerRight,
                   child: const Icon(Icons.delete, color: Colors.white),
                 ),
-                onDismissed: (direction) {
-                  FirebaseUtils.removeFavorite(favorite).then((_) {
-                    // Update the state to reflect the removed item
-                    setState(() {
-                      _favoritesFuture =
-                          FirebaseUtils.fetchFavorites(); // Refresh the list
-                    });
+                onDismissed: (direction) async {
+                  // Store the index of the dismissed item
+                  int dismissedIndex = index;
+                  // Remove the item from local state
+                  setState(() {
+                    _favoritesList.removeAt(dismissedIndex);
                   });
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                        content: Text(
-                            '${favorite.surahName} removed from favorites')),
-                  );
+                  // Try to remove from Firestore
+                  try {
+                    await FirebaseUtils.removeFavorite(favorite);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text(
+                              '${favorite.surahName} removed from favorites')),
+                    );
+                  } catch (error) {
+                    // Restore the item if deletion fails
+                    setState(() {
+                      _favoritesList.insert(dismissedIndex, favorite);
+                    });
+                    // ScaffoldMessenger.of(context).showSnackBar(
+                    //   SnackBar(
+                    //       content:
+                    //           Text('Failed to remove ${favorite.surahName}')),
+                    // );
+                  }
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -114,8 +139,6 @@ class _FavoritescreenState extends State<Favoritescreen> {
                     borderRadius: BorderRadius.circular(12.0.r),
                   ),
                   child: ListTile(
-                    // minLeadingWidth: 10,
-
                     tileColor: Appcolors.favContiner,
                     title: Text(
                       favorite.surahName,

@@ -1,9 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:noon/appColors.dart';
-
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -22,28 +20,37 @@ class _DownloadScreenState extends State<DownloadScreen> {
   @override
   void initState() {
     super.initState();
-    _listFiles();
+    _listFiles(); // Load files on initialization
   }
 
   Future<void> _listFiles() async {
     try {
-      Directory? downloadsDirectory;
+      Directory downloadsDirectory;
 
       if (Platform.isAndroid) {
-        downloadsDirectory = Directory(
-            "/storage/emulated/0/Download/storage/emulated/0/Download/");
+        // Get the download folder for Android
+        downloadsDirectory = Directory('/storage/emulated/0/Download/QuranMp3');
+        print(downloadsDirectory);
       } else if (Platform.isIOS) {
+        // Get the documents folder for iOS
         downloadsDirectory = await getApplicationDocumentsDirectory();
+        downloadsDirectory = Directory('${downloadsDirectory.path}/QuranMp3');
+      } else {
+        return;
       }
 
-      if (downloadsDirectory != null && downloadsDirectory.existsSync()) {
-        List<FileSystemEntity> fileList = downloadsDirectory.listSync();
-        setState(() {
-          files = fileList;
-        });
-      } else {
-        print("Downloads directory does not exist.");
+      // Check if the directory exists; if not, create it
+      if (!await downloadsDirectory.exists()) {
+        await downloadsDirectory.create(
+            recursive: true); // Creates the directory
+        print("QuranMp3 directory created.");
       }
+
+      // List files if the directory exists
+      List<FileSystemEntity> fileList = downloadsDirectory.listSync();
+      setState(() {
+        files = fileList; // Update the UI with the list of files
+      });
     } catch (e) {
       print("Error fetching files: $e");
     }
@@ -63,16 +70,13 @@ class _DownloadScreenState extends State<DownloadScreen> {
       final file = File(filePath);
       if (await file.exists()) {
         await file.delete();
-        // Refresh the file list after deletion
-        _listFiles();
-        // AnimatedSnackBar.rectangle(
-        //   'Success',
-        //   'This is a success snack bar',
-        //   type: AnimatedSnackBarType.success,
-        //   brightness: Brightness.light,
-        // ).show(
-        //   context,
-        // );
+        _listFiles(); // Refresh the file list after deletion
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('File deleted successfully.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
       }
     } catch (e) {
       print('Error deleting file: $e');
@@ -90,10 +94,11 @@ class _DownloadScreenState extends State<DownloadScreen> {
     return Scaffold(
       backgroundColor: Appcolors.primaryColor,
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Appcolors.primaryColor,
         title: Text(
           "Downloaded Files",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white, fontFamily: 'Satoshi'),
         ),
       ),
       body: files.isNotEmpty
@@ -107,12 +112,13 @@ class _DownloadScreenState extends State<DownloadScreen> {
                 return ListTile(
                   title: Text(
                     fileName,
-                    style: TextStyle(color: Colors.white),
+                    style:
+                        TextStyle(color: Colors.white, fontFamily: 'Satoshi'),
                   ),
-                  subtitle: Text(
-                    filePath,
-                    style: TextStyle(color: Colors.white),
-                  ),
+                  // subtitle: Text(
+                  //   filePath,
+                  //   style: TextStyle(color: Colors.white),
+                  // ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -123,7 +129,6 @@ class _DownloadScreenState extends State<DownloadScreen> {
                           size: 30.sp,
                         ),
                         onPressed: () {
-                          // Navigator.pushNamed(context, NowPlaying.routeName);
                           if (fileName.endsWith('.mp3')) {
                             _openFile(filePath); // Open MP3 file
                           } else {
@@ -148,9 +153,13 @@ class _DownloadScreenState extends State<DownloadScreen> {
             )
           : Center(
               child: Text(
-              "No Downloads yet",
-              style: TextStyle(color: Colors.white, fontSize: 25.sp),
-            )),
+                "No Downloads",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 25.sp,
+                    fontFamily: 'Satoshi'),
+              ),
+            ),
     );
   }
 }

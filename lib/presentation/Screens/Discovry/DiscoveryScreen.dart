@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:noon/appColors.dart';
 
-
 import 'package:noon/presentation/Screens/Discovry/searchStates.dart';
 import 'package:noon/presentation/Screens/Discovry/searchcubit.dart';
 import 'package:noon/presentation/Screens/Homepage/homepage.dart';
@@ -38,7 +37,10 @@ class _SearchScreenState extends State<SearchScreen> {
                   // Search bar
                   SizedBox(height: 50.h),
                   TextField(
-                    style: TextStyle(fontSize: 20.sp, color: Colors.white),
+                    style: TextStyle(
+                        fontSize: 20.sp,
+                        color: Colors.white,
+                        fontFamily: 'Satoshi'),
                     controller: searchController,
                     onChanged: (value) {
                       if (value.isNotEmpty) {
@@ -60,7 +62,8 @@ class _SearchScreenState extends State<SearchScreen> {
                           Icon(Icons.search, color: Appcolors.whiteColor),
                       // icon: Icon(Icons.search, color: Colors.blueGrey),
                       labelText: 'Search For Reciter',
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle:
+                          TextStyle(color: Colors.white, fontFamily: 'Satoshi'),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Color(0xff7B9DC6)),
                         borderRadius: BorderRadius.circular(25.r),

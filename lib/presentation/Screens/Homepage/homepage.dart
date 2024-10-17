@@ -12,7 +12,6 @@ import 'package:noon/presentation/Screens/Discovry/DiscoveryScreen.dart';
 import 'package:noon/presentation/Screens/Homepage/cubit/homepageCubit.dart';
 import 'package:noon/presentation/Screens/Homepage/cubit/homepageStates.dart';
 import 'package:noon/presentation/Screens/Homepage/showSur/showsurah.dart';
-import 'package:noon/presentation/Screens/splashScreen/splashScreen.dart';
 
 class Homepage extends StatefulWidget {
   static const String routeName = 'homepage';

@@ -178,11 +178,10 @@ class _LoginState extends State<Login> {
                 height: 30.h,
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Image.asset('assets/divider.png'),
-                  SizedBox(
-                    width: 49.w,
-                  ),
+                  
                   Text(
                     'or',
                     style: TextStyle(
@@ -190,9 +189,7 @@ class _LoginState extends State<Login> {
                         fontSize: 14.sp,
                         fontFamily: 'Satoshi'),
                   ),
-                  SizedBox(
-                    width: 40.w,
-                  ),
+                  
                   Image.asset('assets/divider.png')
                 ],
               ),
@@ -279,7 +276,7 @@ class _LoginState extends State<Login> {
             content: 'An unexpected error occurred. Please try again.');
       } finally {
         setState(() {
-          isLoading = false; // Stop loading
+          isLoading = false; 
         });
       }
     }

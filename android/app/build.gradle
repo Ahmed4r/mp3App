@@ -21,10 +21,10 @@ android {
 
     defaultConfig {
         applicationId = "com.example.mp3_app" // Make sure this matches your google-services.json
-        minSdk = 33 // Set to the minimum SDK version you want to support
+        minSdk = 23 // Set to the minimum SDK version you want to support
         targetSdk = flutter.targetSdkVersion // Update to the latest stable version if needed
-        versionCode = 1 // Increment for new releases
-        versionName = "1.0" // Update as per your versioning strategy
+        versionCode = 2 // Increment for new releases
+        versionName = "2.0" // Update as per your versioning strategy
     }
 
     buildTypes {

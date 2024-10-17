@@ -17,6 +17,7 @@ import 'package:noon/presentation/Screens/Homepage/showSur/cubit/showsurCubit.da
 import 'package:noon/presentation/Screens/Homepage/showSur/cubit/showsurStates.dart';
 import 'package:noon/presentation/widgets/nowplaying.dart';
 
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Showsurah extends StatefulWidget {
@@ -51,27 +52,85 @@ class _ShowsurahState extends State<Showsurah> {
 
   Future<bool> toggleFavorite(
       String url, String surahName, String reciter) async {
-    try {
-      bool isFav =
-          favoriteStatusMap[surahName] ?? false; // Get current favorite status
+    bool isFav =
+        favoriteStatusMap[surahName] ?? false; // Get current favorite status
+    favoriteStatusMap[surahName] = !isFav; // Optimistically update the UI state
 
+    setState(() {}); // Trigger a rebuild to update the favorite icon
+
+    try {
       if (isFav) {
         // Remove from favorites
         await FirebaseUtils.removeFavorite(
             Favorites(surahName: surahName, reciterName: reciter, url: url));
-        favoriteStatusMap[surahName] = false; // Update the favorite status
       } else {
         // Add to favorites
         await FirebaseUtils.addSurahToFirestore(
             Favorites(surahName: surahName, reciterName: reciter, url: url));
-        favoriteStatusMap[surahName] = true; // Update the favorite status
       }
-
-      setState(() {}); // Trigger a rebuild to update the UI
       return !isFav; // Return the new favorite status
     } catch (e) {
       print('Error toggling favorite: $e');
+      favoriteStatusMap[surahName] = isFav; // Revert back on error
+      setState(() {}); // Trigger a rebuild to revert the UI
       return false; // Default to false if there's an error
+    }
+  }
+
+  Future<void> requestStoragePermission(BuildContext context, String url,
+      String surahName, String reciter) async {
+    final status = await Permission.storage.request();
+
+    if (status.isGranted) {
+      // If permission is granted, start downloading the file
+      downloadFile(context, url, surahName, reciter);
+    } else if (status.isDenied) {
+      // If permission is denied, show a snackbar with a warning
+      final snackBar = SnackBar(
+        content: Text('Storage permission is required to download files.'),
+        backgroundColor: Colors.red,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (status.isPermanentlyDenied) {
+      // Open app settings if permission is permanently denied
+      openAppSettings();
+    }
+  }
+
+  void downloadFile(BuildContext context, String url, String surahName,
+      String reciter) async {
+    try {
+      FileDownloader.downloadFile(
+        notificationType: NotificationType.all,
+        downloadService: DownloadService.downloadManager,
+        url: url,
+        name: "$surahName $reciter",
+        subPath: "/QuranMp3",
+        onProgress: (String? fileName, double? progress) {
+          print('FILE $fileName HAS PROGRESS $progress');
+        },
+        onDownloadCompleted: (String path) {
+          print('FILE DOWNLOADED TO PATH: $path');
+          final snackBar = SnackBar(
+            elevation: 0,
+            behavior: SnackBarBehavior.fixed,
+            backgroundColor: Colors.transparent,
+            content: AwesomeSnackbarContent(
+              title: 'Done',
+              message: 'File has been Downloaded Successfully',
+              contentType: ContentType.success,
+            ),
+          );
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
+        },
+        onDownloadError: (String error) {
+          print('DOWNLOAD ERROR: $error');
+        },
+      );
+    } catch (e) {
+      print("Download failed: $e");
     }
   }
 
@@ -154,85 +213,24 @@ class _ShowsurahState extends State<Showsurah> {
                               ),
                               leading: IconButton(
                                 onPressed: () async {
-                                  print(
-                                      'urllllllllllllllllllllllllllllllllllll$url');
-                                  try {
-                                    FileDownloader.downloadFile(
-                                      notificationType: NotificationType.all,
-                                      downloadService:
-                                          DownloadService.downloadManager,
-                                      url: url,
-                                      name: "$surahName by $reciter",
-                                      subPath: "/storage/emulated/0/Download",
-                                      onProgress:
-                                          (String? fileName, double? progress) {
-                                        print(
-                                            'FILE $fileName HAS PROGRESS $progress');
-                                        //////////////////
-                                        ///
-                                      },
-                                      onDownloadCompleted: (String path) {
-                                        print('FILE DOWNLOADED TO PATH: $path');
-
-                                        final snackBar = SnackBar(
-                                          elevation: 0,
-                                          behavior: SnackBarBehavior.fixed,
-                                          backgroundColor: Colors.transparent,
-                                          content: AwesomeSnackbarContent(
-                                            title: 'Done',
-                                            message:
-                                                'File has been Downloaded Successfully',
-
-                                            /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
-                                            contentType: ContentType.success,
-                                          ),
-                                        );
-                                        ScaffoldMessenger.of(context)
-                                          ..hideCurrentSnackBar()
-                                          ..showSnackBar(snackBar);
-                                      },
-                                      onDownloadError: (String error) {
-                                        print('DOWNLOAD ERROR: $error');
-                                      },
-                                    );
-                                  } catch (e) {
-                                    print("Download failed: $e");
-                                  }
+                                  await requestStoragePermission(
+                                      context, url, surahName, reciter);
                                 },
                                 icon: Icon(Icons.download, color: Colors.white),
                               ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  FutureBuilder<bool>(
-                                    future: checkIfFavorite(surahName, reciter),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return CircularProgressIndicator();
-                                      } else if (snapshot.hasError) {
-                                        return Icon(Icons.favorite,
-                                            color: Colors.white);
-                                      }
-
-                                      final isFav = snapshot.data ?? false;
-
-                                      return IconButton(
-                                        onPressed: () async {
-                                          bool newState = await toggleFavorite(
-                                              url, surahName, reciter);
-                                          favoriteStatusMap[surahName] =
-                                              newState;
-                                        },
-                                        icon: Icon(
-                                          Icons.favorite,
-                                          color:
-                                              isFav ? Colors.red : Colors.white,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ],
+                              trailing: IconButton(
+                                onPressed: () async {
+                                  bool newState = await toggleFavorite(
+                                      url, surahName, reciter);
+                                  favoriteStatusMap[surahName] = newState;
+                                },
+                                icon: Icon(
+                                  Icons.favorite,
+                                  color: favoriteStatusMap[surahName] == true
+                                      ? Colors.red
+                                      : Colors.white,
+                                  size: 32.r,
+                                ),
                               ),
                               onTap: () {
                                 Navigator.pushNamed(
@@ -260,22 +258,15 @@ class _ShowsurahState extends State<Showsurah> {
                       style: TextStyle(
                           color: Colors.red,
                           fontFamily: Fontstyle.fontname,
-                          fontSize: 16.sp),
+                          fontSize: 18.sp),
                     ),
-                  ),
-                ],
+                  )
+                ]
               ],
             ),
           );
         },
       ),
     );
-  }
-
-  Future<void> saveSurahToPrefs(
-      String surahId, Map<String, dynamic> surahData) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(
-        'surah_$surahId', jsonEncode(surahData)); // Save as a JSON string
   }
 }

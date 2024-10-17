@@ -23,7 +23,7 @@ class _NowPlayingState extends State<NowPlaying> {
   bool isPlaying = false;
   bool isInitialized = false;
   String? errorMessage;
-  bool isFav = false; // Favorite state
+  bool isFav = false;
 
   @override
   void initState() {
@@ -235,7 +235,7 @@ class _NowPlayingState extends State<NowPlaying> {
                       fontSize: 20,
                       color: Colors.white,
                       fontFamily: Fontstyle.fontname)),
-              Text(surahName,
+              Text("سورة ${surahName}",
                   style: const TextStyle(
                       fontSize: 20,
                       color: Colors.white,
@@ -243,7 +243,9 @@ class _NowPlayingState extends State<NowPlaying> {
             ],
           ),
           IconButton(
-            onPressed: () => _toggleFavorite(url, surahName, reciter),
+            onPressed: () {
+              _toggleFavorite(url, surahName, reciter);
+            },
             icon: Icon(Icons.favorite,
                 color: isFav ? Colors.red : Appcolors.whiteColor, size: 30.sp),
           ),
@@ -302,13 +304,13 @@ class _NowPlayingState extends State<NowPlaying> {
               color: Appcolors.whiteColor, size: 40.sp),
         ),
         IconButton(
-          onPressed: () => _seekTo(0),
-          icon: Icon(Icons.replay, color: Appcolors.whiteColor, size: 40.sp),
-        ),
-        IconButton(
           onPressed: _togglePlay,
           icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow,
               color: Appcolors.whiteColor, size: 40.sp),
+        ),
+        IconButton(
+          onPressed: () => _seekTo(0),
+          icon: Icon(Icons.replay, color: Appcolors.whiteColor, size: 40.sp),
         ),
       ],
     );
@@ -319,7 +321,10 @@ class _NowPlayingState extends State<NowPlaying> {
       padding: const EdgeInsets.all(8.0),
       child: Text(
         errorMessage!,
-        style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+        style: const TextStyle(
+            color: Colors.red,
+            fontWeight: FontWeight.bold,
+            fontFamily: Fontstyle.fontname),
       ),
     );
   }

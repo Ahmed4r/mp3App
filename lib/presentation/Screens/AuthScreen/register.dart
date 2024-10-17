@@ -7,7 +7,6 @@ import 'package:noon/data/model/myuser.dart';
 import 'package:noon/data/utils/firebaseUtils.dart';
 import 'package:noon/presentation/Screens/AuthScreen/dialogUtils.dart';
 import 'package:noon/presentation/Screens/AuthScreen/login.dart';
-import 'package:noon/presentation/Screens/Homepage/homepage.dart';
 
 class Register extends StatefulWidget {
   static const String routeName = 'register';
@@ -205,10 +204,15 @@ class _RegisterState extends State<Register> {
                 height: 20.h,
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Image.asset('assets/divider.png'),
-                  SizedBox(
-                    width: 110.w,
+                  Text(
+                    'or',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14.sp,
+                        fontFamily: 'Satoshi'),
                   ),
                   Image.asset('assets/divider.png')
                 ],
@@ -216,7 +220,6 @@ class _RegisterState extends State<Register> {
               SizedBox(
                 height: 30.h,
               ),
-             
               SizedBox(
                 height: 10.h,
               ),

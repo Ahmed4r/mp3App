@@ -11,8 +11,9 @@ class Homepagecubit extends Cubit<Homepagestates> {
   List<Reciters> reciters = [];
 
   void getRecitersData() async {
-    if (isLoading || isClosed)
+    if (isLoading || isClosed) {
       return; // Prevent multiple calls and emit after close
+    }
     try {
       isLoading = true;
       emit(HomepageLoadingState());

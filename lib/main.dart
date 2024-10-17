@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:noon/data/sharedpref/sharedprefUtils.dart';
 import 'package:noon/firebase_options.dart';
 import 'package:noon/presentation/Screens/AuthScreen/login.dart';
-import 'package:noon/presentation/Screens/AuthScreen/mainauth.dart';
+
 import 'package:noon/presentation/Screens/AuthScreen/register.dart';
 import 'package:noon/presentation/Screens/Discovry/DiscoveryScreen.dart';
 import 'package:noon/presentation/Screens/Homepage/aduioHandler.dart';
@@ -35,13 +35,12 @@ class Mp3App extends StatelessWidget {
             Splashscreen.routeName: (context) => const Splashscreen(),
             Homepage.routeName: (context) => const Bottomnavbar(),
             Showsurah.routeName: (context) => const Showsurah(),
-            Mainauth.routeName: (context) => const Mainauth(),
             Login.routeName: (context) => const Login(),
             Register.routeName: (context) => const Register(),
             NowPlaying.routeName: (context) => const NowPlaying(),
             SearchScreen.routeName: (context) => const SearchScreen(),
             Favoritescreen.routeName: (context) => const Favoritescreen(),
-            DownloadScreen.routeName: (context) =>  DownloadScreen(),
+            DownloadScreen.routeName: (context) => DownloadScreen(),
           },
         );
       },
