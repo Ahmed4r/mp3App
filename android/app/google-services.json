@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "550585436528",
+    "project_id": "noonapp-90ada",
+    "storage_bucket": "noonapp-90ada.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:550585436528:android:db68468d3c41ca7d2d67b5",
+        "android_client_info": {
+          "package_name": "com.example.mp3_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "550585436528-9vjq5c0rgds0sp6jn68hlp0n3d79ebu5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBN2NYT2aMNM8j4HOOfuQrWwqgg0MXM0A0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "550585436528-9vjq5c0rgds0sp6jn68hlp0n3d79ebu5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "550585436528-c3519vnv2ri6l2s8othk1k6vppl0d2a0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mp3App"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
