@@ -30,8 +30,8 @@ jobs:
       # Clean and update CocoaPods
       - name: Clean and update CocoaPods
         run: |
-          rm -f ios/Podfile.lock
           cd ios
+          rm -f Podfile.lock
           pod repo update
           pod deintegrate
           pod install
