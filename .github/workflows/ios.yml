@@ -7,7 +7,6 @@ jobs:
   build-ios:
     name: 🎉 iOS Build
     runs-on: macos-latest
-
     steps:
       - uses: actions/checkout@v3
 
@@ -26,17 +25,15 @@ jobs:
             echo "platform :ios, '15.5'" | cat - Podfile > temp && mv temp Podfile
           fi
           cd ..
-
-      # Clean and update CocoaPods
+      # Clean and reinstall CocoaPods
       - name: Clean and update CocoaPods
         run: |
+          rm -f ios/Podfile.lock
           cd ios
-          rm -f Podfile.lock
           pod repo update
           pod deintegrate
           pod install
           cd ..
-
       - run: flutter build ios --release --no-codesign
 
       - run: mkdir Payload
