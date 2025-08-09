@@ -45,5 +45,20 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<!-- iOS Permissions -->
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>This app needs to save downloaded surahs to your photo library.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to read Quran MP3 files.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs access to the microphone for audio features.</string>
+
+	<!-- Internet Access -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>
