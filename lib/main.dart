@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:noon/data/sharedpref/sharedprefUtils.dart';
 import 'package:noon/firebase_options.dart';
 import 'package:noon/presentation/Screens/AuthScreen/login.dart';
-
 import 'package:noon/presentation/Screens/AuthScreen/register.dart';
 import 'package:noon/presentation/Screens/Discovry/DiscoveryScreen.dart';
 import 'package:noon/presentation/Screens/Homepage/aduioHandler.dart';

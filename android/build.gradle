@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.0' // Adjust based on your Android Gradle Plugin version
+        classpath 'com.android.tools.build:gradle:8.3.0' // Adjust based on your Android Gradle Plugin version
         classpath 'com.google.gms:google-services:4.3.14' // Check for the latest version
     }
 }
