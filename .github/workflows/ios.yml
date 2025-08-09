@@ -8,32 +8,53 @@ jobs:
   build-ios:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      # 🛒 Checkout repository
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      - uses: subosito/flutter-action@v2
+      # 🐦 Setup Flutter
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.32.5"
           channel: stable
           architecture: x64
 
-      - run: flutter pub get
+      # 📦 Install Flutter dependencies (Generates Generated.xcconfig)
+      - name: Get Flutter Packages
+        run: flutter pub get
 
-      - run: |
+      # 📦 Install CocoaPods dependencies
+      - name: Install CocoaPods
+        run: |
           cd ios
+          pod repo update
           pod install
           cd ..
 
-      - run: flutter build ios --release --no-codesign
+      # 🏗️ Build iOS release without codesign
+      - name: Build iOS IPA
+        run: flutter build ios --release --no-codesign
 
-      - run: |
+      # 📂 Prepare Payload folder for IPA
+      - name: Create Payload
+        run: |
           mkdir -p build/ios/iphoneos/Payload
           mv build/ios/iphoneos/Runner.app build/ios/iphoneos/Payload/
+
+      # 🗜️ Create IPA file
+      - name: Zip to IPA
+        run: |
           cd build/ios/iphoneos
           zip -r FlutterIpaExport.ipa Payload
 
-      - uses: softprops/action-gh-release@v1
+      # 🚀 Upload IPA to GitHub Release
+      - name: Upload IPA to GitHub Release
+        uses: softprops/action-gh-release@v1
         with:
           tag_name: v1.0.${{ github.run_number }}
+          name: Release v1.0.${{ github.run_number }}
+          body: "📦 Auto-generated unsigned IPA for testing"
           files: build/ios/iphoneos/FlutterIpaExport.ipa
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
