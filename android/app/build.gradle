@@ -1,9 +1,10 @@
 plugins {
     id "com.android.application"
-    id 'com.google.gms.google-services' // Firebase services
-    id "kotlin-android" // Kotlin support
-    id "dev.flutter.flutter-gradle-plugin" // Flutter plugin
+    id "com.google.gms.google-services" // Firebase
+    id "kotlin-android" // Kotlin
+    id "dev.flutter.flutter-gradle-plugin" // Flutter
 }
+
 def keystoreProperties = new Properties()
 def keystorePropertiesFile = rootProject.file('key.properties')
 if (keystorePropertiesFile.exists()) {
@@ -11,13 +12,13 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.example.mp3_app" // Update if necessary
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    namespace "com.example.mp3_app"
+    compileSdk flutter.compileSdkVersion
+    ndkVersion flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
@@ -25,43 +26,33 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.mp3_app" // Make sure this matches your google-services.json
-        minSdk = 24 // Set to the minimum SDK version you want to support
-        targetSdk = flutter.targetSdkVersion // Update to the latest stable version if needed
-        versionCode = 2 // Increment for new releases
-        versionName = "2.0" // Update as per your versioning strategy
+        applicationId "com.example.mp3_app"
+        minSdk 24
+        targetSdk flutter.targetSdkVersion
+        versionCode 2
+        versionName "2.0"
     }
+
     signingConfigs {
         release {
-            keyAlias = keystoreProperties['keyAlias']
-            keyPassword = keystoreProperties['keyPassword']
-            storeFile = keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword = keystoreProperties['storePassword']
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+            storePassword keystoreProperties['storePassword']
         }
     }
 
     buildTypes {
         release {
-             signingConfig = signingConfigs.release
-           
-     
+            signingConfig signingConfigs.release
+            // Uncomment for release optimizations:
+            // minifyEnabled true
+            // shrinkResources true
+            // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
 
 flutter {
-    source = "../.."
+    source "../.."
 }
-
-// Ensure you have a release signing configuration defined in your project
-android {
-    signingConfigs {
-        release {
-            // storeFile file("path-to-your-release-keystore.jks") // Path to your keystore
-            // storePassword "your-keystore-password" // Keystore password
-            // keyAlias "your-key-alias" // Key alias
-            // keyPassword "your-key-password" // Key password
-        }
-    }
-}
-

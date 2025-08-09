@@ -1,5 +1,5 @@
-
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -77,20 +77,25 @@ class _ShowsurahState extends State<Showsurah> {
 
   Future<void> requestStoragePermission(BuildContext context, String url,
       String surahName, String reciter) async {
-    final status = await Permission.storage.request();
+    final deviceInfo = DeviceInfoPlugin();
+    final androidInfo = await deviceInfo.androidInfo;
+
+    Permission permissionToRequest = androidInfo.version.sdkInt >= 30
+        ? Permission.manageExternalStorage
+        : Permission.storage;
+
+    final status = await permissionToRequest.request();
 
     if (status.isGranted) {
-      // If permission is granted, start downloading the file
       downloadFile(context, url, surahName, reciter);
     } else if (status.isDenied) {
-      // If permission is denied, show a snackbar with a warning
-      final snackBar = SnackBar(
-        content: Text('Storage permission is required to download files.'),
-        backgroundColor: Colors.red,
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text('Storage permission is required to download files.'),
+            backgroundColor: Colors.red),
       );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else if (status.isPermanentlyDenied) {
-      // Open app settings if permission is permanently denied
+      // For Android 11+, MANAGE_EXTERNAL_STORAGE will require opening settings
       openAppSettings();
     }
   }

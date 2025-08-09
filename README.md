@@ -3,7 +3,7 @@ Here’s a clean **README.md** in **English** for your Quran MP3 app repo.
 
 ---
 
-```markdown
+````markdown
 # 📖 Quran MP3 App
 
 **Quran MP3** is a Flutter-based mobile application that allows users to listen to high-quality audio recitations of the Holy Quran.  
@@ -26,24 +26,15 @@ It features an intuitive interface, smooth playback controls, and support for ba
 - [permission_handler](https://pub.dev/packages/permission_handler) — Request storage permissions.
 - [flutter_file_downloader](https://pub.dev/packages/flutter_file_downloader) — Download MP3 files.
 
-## 📂 Project Structure
-```
+## 📸 Screenshots
 
-mp3App/
-│
-├── lib/
-│ ├── main.dart # App entry point
-│ ├── screens/ # App screens (player UI, surah list, etc.)
-│ ├── widgets/ # Reusable components
-│
-├── assets/
-│ ├── audio/ # Local audio files
-│
-├── android/ # Android native configuration
-├── ios/ # iOS native configuration
-└── pubspec.yaml # Dependencies & assets
+Here are some screenshots of the Quran MP3 App:
 
-````
+| reciter Screen                               | Surah Screen                             | play screen                            | download screen                                |
+| -------------------------------------------- | ---------------------------------------- | -------------------------------------- | ---------------------------------------------- |
+| ![reciter Screen](assets/images/reciter.png) | ![surah Screen](assets/images/surah.png) | ![play screen](assets/images/play.png) | ![download screen](assets/images/download.png) |
+
+Make sure to add your screenshots to the `screenshots` directory in your project.
 
 ## 🚀 Getting Started
 
@@ -51,6 +42,7 @@ mp3App/
    ```bash
    git clone https://github.com/Ahmed4r/mp3App.git
    cd mp3App
+   ```
 ````
 
 2. **Install dependencies**
