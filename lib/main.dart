@@ -27,6 +27,9 @@ class Mp3App extends StatelessWidget {
       designSize: const Size(390, 844),
       builder: (context, child) {
         return MaterialApp(
+          theme: ThemeData(
+            splashFactory: NoSplash.splashFactory,
+          ),
           debugShowCheckedModeBanner: false,
           home: const Splashscreen(),
           initialRoute: route,
