@@ -51,6 +51,13 @@ jobs:
       - name: Flutter Precache iOS
         run: flutter precache --ios
 
+      - name: Print Swift and CocoaPods versions
+        run: |
+          echo "--- swift --version ---"
+          swift --version || true
+          echo "--- pod --version ---"
+          pod --version || true
+
       - name: Build .app without codesign
         run: flutter build ios --release --no-codesign
 

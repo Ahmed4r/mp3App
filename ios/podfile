@@ -37,9 +37,6 @@ target 'Runner' do
         config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
                 # Use modern Swift matching Xcode on macos-14 (Swift 5.9)
                 config.build_settings['SWIFT_VERSION'] = '5.9'
-                # Enable experimental flag required by some Firebase sources
-                existing = config.build_settings['OTHER_SWIFT_FLAGS'] || ''
-                config.build_settings['OTHER_SWIFT_FLAGS'] = "#{existing} -enable-experimental-feature AccessLevelOnImport"
       end
     end
   end
