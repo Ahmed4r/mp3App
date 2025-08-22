@@ -24,6 +24,7 @@ class _BottomnavbarState extends State<Bottomnavbar> {
   void onTap(int index) {
     setState(() {
       currentIndex = index;
+      
     });
   }
 
@@ -32,9 +33,11 @@ class _BottomnavbarState extends State<Bottomnavbar> {
     return Scaffold(
       backgroundColor: const Color(0xff343434),
       body: screens[currentIndex],
+      
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color(0xff343434),
         currentIndex: currentIndex,
+        
         onTap: onTap,
         selectedItemColor: const Color(0xff699B88),
         unselectedItemColor: Colors.grey, // Set to a visible color

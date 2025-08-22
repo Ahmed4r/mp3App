@@ -30,7 +30,6 @@ class Mp3App extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           home: const Splashscreen(),
           initialRoute: route,
-          
           routes: {
             Splashscreen.routeName: (context) => const Splashscreen(),
             Homepage.routeName: (context) => const Bottomnavbar(),
