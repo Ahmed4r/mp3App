@@ -24,6 +24,7 @@ jobs:
           cd ios
           pod repo update
           rm -rf Pods Podfile.lock
+          pod deintegrate
           pod install
 
       - name: Flutter Precache iOS

@@ -15,7 +15,7 @@ class Bottomnavbar extends StatefulWidget {
 class _BottomnavbarState extends State<Bottomnavbar> {
   int currentIndex = 0;
   List<Widget> screens = [
-     Homepage(),
+    Homepage(),
     SearchScreen(),
     Favoritescreen(),
     DownloadScreen()
