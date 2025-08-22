@@ -53,7 +53,7 @@ dependencies:
   al_downloader: ^1.8.4
   flutter_downloader: ^1.11.1
   open_file: ^3.2.1
-  connectivity_plus:
+  connectivity_plus: ^6.0.3
   flutter_file_downloader: ^2.0.0
   quickalert: ^1.1.0
   awesome_snackbar_content: ^0.1.4
