@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,7 +10,6 @@ import 'package:noon/presentation/Screens/AuthScreen/dialogUtils.dart';
 import 'package:noon/presentation/Screens/AuthScreen/register.dart';
 import 'package:noon/presentation/Screens/Homepage/homepage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
 
 class Login extends StatefulWidget {
   static const String routeName = 'login';
@@ -181,7 +182,6 @@ class _LoginState extends State<Login> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Image.asset('assets/divider.png'),
-                  
                   Text(
                     'or',
                     style: TextStyle(
@@ -189,7 +189,6 @@ class _LoginState extends State<Login> {
                         fontSize: 14.sp,
                         fontFamily: 'Satoshi'),
                   ),
-                  
                   Image.asset('assets/divider.png')
                 ],
               ),
@@ -276,7 +275,7 @@ class _LoginState extends State<Login> {
             content: 'An unexpected error occurred. Please try again.');
       } finally {
         setState(() {
-          isLoading = false; 
+          isLoading = false;
         });
       }
     }
@@ -284,7 +283,6 @@ class _LoginState extends State<Login> {
 
   Future<void> saveUserDetails(String? email, String? uid, String token) async {
     try {
-    
       await Sharedprefutils.saveData(
           key: 'usertoken', value: token); // Use consistent key 'usertoken'
       await Sharedprefutils.saveData(key: 'userEmail', value: email);
@@ -324,6 +322,7 @@ class _LoginState extends State<Login> {
 
       Navigator.pushReplacementNamed(context, Homepage.routeName);
     } catch (error) {
+      log('Google Sign-In error: $error');
       Dialogutils.showMessage(
           context: context, content: 'Google Sign-In error: $error');
     } finally {
