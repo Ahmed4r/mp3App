@@ -30,24 +30,6 @@ jobs:
           pod deintegrate
           pod install --repo-update
 
-      - name: Dump Podfile.lock and Firebase pods
-        run: |
-          echo "--- Podfile.lock ---"
-          sed -n '1,200p' ios/Podfile.lock || true
-          echo "--- Installed Firebase related pods ---"
-          grep -R "Firebase\|GTMAppAuth\|GoogleUtilities\|FirebaseSharedSwift" ios/Pods -n || true
-          # Save outputs to files so we can upload them as artifacts for inspection
-          sed -n '1,200p' ios/Podfile.lock > podfile_lock.txt || true
-          grep -R "Firebase\|GTMAppAuth\|GoogleUtilities\|FirebaseSharedSwift" ios/Pods -n > pods_firebase_list.txt || true
-
-      - name: Upload Pod diagnostics artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ios-pod-diagnostics
-          path: |
-            podfile_lock.txt
-            pods_firebase_list.txt
-
       - name: Flutter Precache iOS
         run: flutter precache --ios
 
