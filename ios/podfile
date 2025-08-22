@@ -35,8 +35,8 @@ target 'Runner' do
       target.build_configurations.each do |config|
                 config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
         config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
-                # Use modern Swift matching Xcode on macos-14 (Swift 5.9)
-                config.build_settings['SWIFT_VERSION'] = '5.9'
+                # Use modern Swift matching Xcode on macos-14 (Swift 5.10)
+                config.build_settings['SWIFT_VERSION'] = '5.10'
       end
     end
   end
