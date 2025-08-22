@@ -30,6 +30,13 @@ jobs:
           pod deintegrate
           pod install --repo-update
 
+      - name: Dump Podfile.lock and Firebase pods
+        run: |
+          echo "--- Podfile.lock ---"
+          sed -n '1,200p' ios/Podfile.lock || true
+          echo "--- Installed Firebase related pods ---"
+          grep -R "Firebase\|GTMAppAuth\|GoogleUtilities\|FirebaseSharedSwift" ios/Pods -n || true
+
       - name: Flutter Precache iOS
         run: flutter precache --ios
 
