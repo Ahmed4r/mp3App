@@ -37,6 +37,9 @@ target 'Runner' do
         config.build_settings['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64'
                 # Use modern Swift matching Xcode on macos-14 (Swift 5.10)
                 config.build_settings['SWIFT_VERSION'] = '5.10'
+                # Enable AccessLevelOnImport for pods that use access-level imports
+                existing = config.build_settings['OTHER_SWIFT_FLAGS'] || ''
+                config.build_settings['OTHER_SWIFT_FLAGS'] = "#{existing} -enable-experimental-feature AccessLevelOnImport"
       end
     end
   end
