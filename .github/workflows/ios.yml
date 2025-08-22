@@ -42,8 +42,6 @@ jobs:
           cd ios
           rm -rf build
 
-      
-
       - name: Build .app without codesign
         run: flutter build ios --release --no-codesign
 

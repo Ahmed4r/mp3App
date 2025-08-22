@@ -24,7 +24,9 @@ flutter_ios_podfile_setup
 
 target 'Runner' do
   use_modular_headers!
-  
+
+  pod 'FirebaseSharedSwift', '1.7.0'
+
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
   post_install do |installer|
